@@ -3,6 +3,7 @@ import type { CardItem, InvoiceLine, InvoiceTotal } from '@api/modules/ledger'
 import { testAppDeps } from '@api/testing/app'
 import { connectTestDatabases } from '@api/testing/database'
 import { createFixtures } from '@api/testing/fixtures'
+import { freezeDate, unfreezeDate } from '@api/testing/frozen-date'
 import { addMemberWithSystemRole, loggedInUser, requestsAs } from '@api/testing/http'
 import type { SessionRequests } from '@api/testing/testing.types'
 import type { InvoiceLinePage } from '@financas/shared'
@@ -21,6 +22,7 @@ let checkingAccountId: string
 let categoryId: string
 
 beforeAll(async () => {
+  freezeDate()
   const ownerSession = await loggedInUser(app, databases.app, fixtures.runId, 'cards-owner')
   const memberSession = await loggedInUser(app, databases.app, fixtures.runId, 'cards-member')
   const viewerSession = await loggedInUser(app, databases.app, fixtures.runId, 'cards-viewer')
@@ -40,6 +42,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
+  unfreezeDate()
   await fixtures.removeEverything()
   await databases.closeAll()
 })

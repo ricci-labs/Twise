@@ -3,15 +3,15 @@ import type { EntryItem } from '@api/modules/ledger'
 import { testAppDeps } from '@api/testing/app'
 import { connectTestDatabases } from '@api/testing/database'
 import { createFixtures } from '@api/testing/fixtures'
+import { freezeDate, unfreezeDate } from '@api/testing/frozen-date'
 import { addMemberWithSystemRole, loggedInUser, requestsAs } from '@api/testing/http'
 import type { SessionRequests } from '@api/testing/testing.types'
 import type { Page } from '@financas/shared'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 const databases = connectTestDatabases()
 const fixtures = createFixtures(databases.owner, databases.app)
 const app = createApp(testAppDeps({ db: databases.app }))
-const DAY_THE_DATA_DESCRIBES = new Date('2026-10-20T15:00:00Z')
 
 let owner: SessionRequests
 let viewer: SessionRequests
@@ -31,7 +31,7 @@ let contactJId: string
 let contactKId: string
 
 beforeAll(async () => {
-  vi.useFakeTimers({ toFake: ['Date'], now: DAY_THE_DATA_DESCRIBES })
+  freezeDate()
   const ownerSession = await loggedInUser(app, databases.app, fixtures.runId, 'search-owner')
   const memberSession = await loggedInUser(app, databases.app, fixtures.runId, 'search-member')
   const viewerSession = await loggedInUser(app, databases.app, fixtures.runId, 'search-viewer')
@@ -127,7 +127,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  vi.useRealTimers()
+  unfreezeDate()
   await fixtures.removeEverything()
   await databases.closeAll()
 })
