@@ -900,6 +900,7 @@ export function selectInvoicesDueBetween(tx: WorkspaceTransaction, from: IsoDate
   return tx
     .select({
       invoiceId: invoiceTotals.invoiceId,
+      cardId: invoiceTotals.cardAccountId,
       cardName: ledgerAccounts.name,
       dueOn: invoiceTotals.dueOn,
       dueCents: invoiceTotals.dueCents,

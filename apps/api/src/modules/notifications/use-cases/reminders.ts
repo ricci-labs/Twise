@@ -83,6 +83,12 @@ function billReminder(bill: OccurrenceRow): Pick<NewNotification, 'kind' | 'payl
 function invoiceReminder(invoice: InvoiceDue): Pick<NewNotification, 'kind' | 'payload'> {
   return {
     kind: 'invoice_reminder',
-    payload: { cardName: invoice.cardName, amountCents: invoice.dueCents, dueOn: invoice.dueOn },
+    payload: {
+      cardId: invoice.cardId,
+      invoiceId: invoice.invoiceId,
+      cardName: invoice.cardName,
+      amountCents: invoice.dueCents,
+      dueOn: invoice.dueOn,
+    },
   }
 }

@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for attachments (receipts on entries and charges), the audit history screen, and what the user experiences from notifications (reminder emails).
 read_when: Designing or building ATT-01, AUD-01, or anything about receipts, history or reminders.
-updated: 2026-10-30
+updated: 2026-11-06
 ---
 
 # Attachments, history and notifications
@@ -88,7 +88,6 @@ Each reminder is sent once per member. Quiet hours (`ME-01`) delay it to the end
 the workspace time zone.
 
 **RF-NOT-1** The e-mail buttons open the app on the right screen: bills → `PLAN-03`, invoices →
-`CARD-03` (when the links carry the target; today they open the app's home, see
-`../api-gaps.md`).
+`CARD-03`.
 **RF-NOT-2** (Later) A notifications area in the app, budget alerts, a daily digest, commission
 suggestions, and WhatsApp as a channel, as the matching features arrive.

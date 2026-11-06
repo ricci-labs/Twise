@@ -32,7 +32,7 @@ export type NotificationEmailInput = {
   kind: NotificationKind
   payload: unknown
   recipient: EmailRecipient
-  appLink: string
+  workspaceLink: string
 }
 
 export type DeliveryReport = {
