@@ -86,6 +86,21 @@ export function EntryDetailActions({
           } as const,
         ]
       : []),
+    ...(entry.entryType === 'card_purchase' && hasPermission(permissions, 'entries', 'create')
+      ? [
+          {
+            key: 'refund',
+            label: messages.actions.refund,
+            icon: 'refresh',
+            render: (
+              <Link
+                to="."
+                search={(previous) => ({ ...previous, entry: 'new', entryRefund: entry.id })}
+              />
+            ),
+          } as const,
+        ]
+      : []),
     ...(hasPermission(permissions, 'attachments', 'create')
       ? [
           {

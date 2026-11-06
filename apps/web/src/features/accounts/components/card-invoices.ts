@@ -26,6 +26,7 @@ const messages = accountsMessages.invoicesPage
 const TIME_ZONE = 'America/Sao_Paulo'
 
 const INVOICE_PAYMENT = 'invoice_payment'
+const REFUND = 'refund'
 
 const PAYMENT_ICON = 'invoice-paid'
 
@@ -84,7 +85,7 @@ export function invoiceLinesOf(
       detail: detailOf(line, isPayment, counterpart?.name),
       amountCents: line.amountCents,
       frontedCents: line.frontedCents,
-      isPayment,
+      isPayment: isPayment || line.entryType === REFUND,
       isFronted: line.frontedCents > 0,
     }
   })
@@ -166,6 +167,9 @@ function detailOf(
 ): string | undefined {
   if (isPayment) {
     return counterpartName ? messages.paidWith(counterpartName) : undefined
+  }
+  if (line.entryType === REFUND) {
+    return messages.refund
   }
   return line.frontedCents > 0 ? messages.fronted(formatBrl(line.frontedCents)) : undefined
 }

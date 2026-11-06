@@ -7,7 +7,7 @@ import {
   MAX_SHARES_PER_ENTRY,
   PAYMENT_METHODS,
 } from '@financas/shared'
-import { hasCategory, isSpending } from '@web/features/entries/components/entry-kind'
+import { hasCategory, hasShares } from '@web/features/entries/components/entry-kind'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import { centsOfTypedAmount, sumOfTypedAmounts } from '@web/lib/format/money'
 import { z } from 'zod'
@@ -24,9 +24,12 @@ const FORM_ENTRY_TYPES = [
   'opening_balance',
   'invoice_payment',
   'settlement',
+  'refund',
 ] as const
 
-const CARD_TYPES: readonly string[] = ['card_purchase', 'invoice_payment']
+const CARD_TYPES: readonly string[] = ['card_purchase', 'invoice_payment', 'refund']
+
+const REFUND = 'refund'
 
 const INVOICE_PAYMENT = 'invoice_payment'
 
@@ -48,6 +51,7 @@ export const newEntrySearchSchema = z.object({
   entryContact: z.uuid().optional().catch(undefined),
   entryInvoice: z.uuid().optional().catch(undefined),
   entryRepeat: z.uuid().optional().catch(undefined),
+  entryRefund: z.uuid().optional().catch(undefined),
   entryOccurrence: z.uuid().optional().catch(undefined),
 })
 
@@ -87,11 +91,14 @@ export const entryFormSchema = z
     shares: z.array(entryShareSchema).max(MAX_SHARES_PER_ENTRY),
     notes: z.string().trim().max(ENTRY_NOTES_MAX_LENGTH),
   })
-  .refine((values) => values.entryType === CARD_PURCHASE || Boolean(values.accountId), {
-    path: ['accountId'],
-    message: entriesMessages.required.accountId,
-    when: () => true,
-  })
+  .refine(
+    (values) => [CARD_PURCHASE, REFUND].includes(values.entryType) || Boolean(values.accountId),
+    {
+      path: ['accountId'],
+      message: entriesMessages.required.accountId,
+      when: () => true,
+    },
+  )
   .refine((values) => values.entryType !== TRANSFER || Boolean(values.toAccountId), {
     path: ['toAccountId'],
     message: entriesMessages.required.toAccountId,
@@ -145,7 +152,7 @@ export const entryFormSchema = z
   )
   .refine(
     (values) =>
-      !isSpending(values.entryType) ||
+      !hasShares(values.entryType) ||
       values.shares.every((share) => (centsOfTypedAmount(share.amount) ?? 0) > 0),
     {
       path: ['shares'],
@@ -157,7 +164,7 @@ export const entryFormSchema = z
     (values) => {
       const totalCents = centsOfTypedAmount(values.amount)
       return (
-        !isSpending(values.entryType) ||
+        !hasShares(values.entryType) ||
         totalCents === null ||
         sumOfTypedAmounts(values.shares.map((share) => share.amount)) <= totalCents
       )

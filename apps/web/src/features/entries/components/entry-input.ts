@@ -10,6 +10,11 @@ const FIELDS_OF_TYPE: Readonly<Record<EntryFormValues['entryType'], EntryInputFi
     installmentCount: values.installmentCount,
     firstInstallment: values.isInProgress ? values.firstInstallment : 1,
   }),
+  refund: (values) => ({
+    cardAccountId: values.cardAccountId,
+    categoryId: values.categoryId,
+    shares: sharesOf(values),
+  }),
   income: (values) => ({
     receivedInAccountId: values.accountId,
     categoryId: values.categoryId,
@@ -48,9 +53,13 @@ function spendingOf(values: EntryFormValues) {
     categoryId: values.categoryId,
     paymentMethod: values.paymentMethod || null,
     spentByUserId: values.spentByUserId || null,
-    shares: values.shares.map((share) => ({
-      contactId: share.contactId,
-      amountCents: centsOfTypedAmount(share.amount),
-    })),
+    shares: sharesOf(values),
   }
+}
+
+function sharesOf(values: EntryFormValues) {
+  return values.shares.map((share) => ({
+    contactId: share.contactId,
+    amountCents: centsOfTypedAmount(share.amount),
+  }))
 }

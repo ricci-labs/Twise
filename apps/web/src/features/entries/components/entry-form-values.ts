@@ -1,10 +1,11 @@
-import { MONEY_ACCOUNT_KINDS } from '@financas/shared'
+import { type EntryShare, MONEY_ACCOUNT_KINDS } from '@financas/shared'
 import type { EntryFormInput, ListedEntry } from '@web/features/entries/entries.types'
 import { formatTypedAmount } from '@web/lib/format/money'
 
 const MONEY_KINDS: ReadonlySet<string> = new Set(MONEY_ACCOUNT_KINDS)
 const CATEGORY_KINDS: ReadonlySet<string> = new Set(['expense_category', 'income_category'])
 const CARD_KIND = 'credit_card'
+const REFUND = 'refund'
 const FIRST = 1
 const NONE = ''
 
@@ -19,12 +20,21 @@ export function formInputOf(entry: ListedEntry): EntryFormInput {
     occurredOn: entry.occurredOn,
     paymentMethod: entry.paymentMethod ?? NONE,
     spentByUserId: entry.spentByUserId ?? NONE,
-    shares: entry.shares.map((share) => ({
+    shares: sharesOf(entry).map((share) => ({
       contactId: share.contactId,
       amount: formatTypedAmount(share.amountCents),
     })),
     notes: entry.notes ?? NONE,
   }
+}
+
+function sharesOf(entry: ListedEntry): readonly EntryShare[] {
+  if (entry.entryType !== REFUND) {
+    return entry.shares
+  }
+  return entry.postings.flatMap(({ contactId, amountCents }) =>
+    contactId ? [{ contactId, amountCents: Math.abs(amountCents) }] : [],
+  )
 }
 
 function accountsOf(entry: ListedEntry) {

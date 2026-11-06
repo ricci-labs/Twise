@@ -5,7 +5,11 @@ import { TextArea } from '@web/components/inputs/text-area'
 import { AmountField } from '@web/features/entries/components/amount-field'
 import { DateField } from '@web/features/entries/components/date-field'
 import { DescriptionField } from '@web/features/entries/components/description-field'
-import { hasPaymentMethod, isSpending } from '@web/features/entries/components/entry-kind'
+import {
+  hasPaymentMethod,
+  hasShares,
+  isSpending,
+} from '@web/features/entries/components/entry-kind'
 import { MembersField } from '@web/features/entries/components/members-field'
 import { LeadFields, MoneyFields } from '@web/features/entries/components/money-fields'
 import { RecentRow } from '@web/features/entries/components/recent-row'
@@ -98,7 +102,7 @@ export function EntryFormFields({
           </FormField>
         )}
         {isSpendingEntry && canSeeMembers && <MembersField workspaceId={workspaceId} />}
-        {isSpendingEntry && canSeeContacts && (
+        {hasShares(entryType) && canSeeContacts && (
           <div className="lg:col-span-2">
             <SharesField
               workspaceId={workspaceId}

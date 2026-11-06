@@ -6,11 +6,12 @@ import { useRef, useState } from 'react'
 
 const messages = entriesMessages.newEntry
 const MAIN_TYPES: readonly FormEntryType[] = ['expense', 'card_purchase', 'income', 'transfer']
-const MORE_TYPES = ['invoice_payment', 'settlement', 'opening_balance'] as const
+const MORE_TYPES = ['invoice_payment', 'settlement', 'refund', 'opening_balance'] as const
 const MORE = 'more'
 const DRAWINGS = {
   invoice_payment: 'invoice-paid',
   settlement: 'settlement',
+  refund: 'invoice-paid',
   opening_balance: 'opening-balance',
 } as const
 const NEEDS_CONTACTS = 'settlement'

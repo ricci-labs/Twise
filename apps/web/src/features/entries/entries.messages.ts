@@ -32,6 +32,11 @@ export const entriesMessages = {
       opening_balance: 'Saldo inicial',
       invoice_payment: 'Pagamento de fatura',
       settlement: 'Recebimento de contato',
+      refund: 'Estorno',
+    },
+    refund: {
+      note: 'O valor volta como crédito na fatura desta data, ou na fatura aberta se ela já fechou. As parcelas futuras não mudam.',
+      description: (purchase: string) => `Estorno: ${purchase}`,
     },
     more: {
       label: 'Mais',
@@ -39,6 +44,7 @@ export const entriesMessages = {
       details: {
         invoice_payment: 'Pagar a fatura de um cartão',
         settlement: 'Alguém pagou o que devia a vocês',
+        refund: 'O cartão devolveu o valor de uma compra',
         opening_balance: 'O saldo de partida de uma conta',
       },
     },
@@ -385,6 +391,7 @@ export const entriesMessages = {
         triggerOf: (description: string) => `Ações de ${description}`,
         edit: 'Editar',
         repeat: 'Repetir',
+        refund: 'Registrar estorno',
         attach: 'Anexar comprovante',
         deleteWithReason: 'Excluir com motivo',
         delete: 'Excluir',

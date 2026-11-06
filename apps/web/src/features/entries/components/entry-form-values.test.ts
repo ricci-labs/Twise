@@ -102,4 +102,23 @@ describe('formInputOf', () => {
       ),
     ).toMatchObject({ accountId: 'checking', isNegative: true })
   })
+
+  it('reads the parts of a refund from its reverse receivable lines', () => {
+    const refund = entry({
+      entryType: 'refund',
+      amountCents: 5000,
+      shares: [],
+      postings: [
+        posting('card', 'credit_card', 5000),
+        posting('groceries', 'expense_category', -3000),
+        posting('receivable', 'receivable', -2000, { contactId: 'j' }),
+      ],
+    })
+    expect(formInputOf(refund)).toMatchObject({
+      entryType: 'refund',
+      cardAccountId: 'card',
+      categoryId: 'groceries',
+      shares: [{ contactId: 'j', amount: '20,00' }],
+    })
+  })
 })

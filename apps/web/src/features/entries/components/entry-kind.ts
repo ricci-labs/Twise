@@ -5,7 +5,8 @@ import {
   SPENDING_ENTRY_TYPES,
 } from '@financas/shared'
 
-const WITH_CATEGORY: readonly string[] = ENTRY_TYPES_WITH_CATEGORY
+const REFUND = 'refund'
+const WITH_CATEGORY: readonly string[] = [...ENTRY_TYPES_WITH_CATEGORY, REFUND]
 const WITH_PAYMENT_METHOD: readonly string[] = ENTRY_TYPES_WITH_PAYMENT_METHOD
 const SPENDING: readonly string[] = SPENDING_ENTRY_TYPES
 
@@ -19,6 +20,10 @@ export function hasPaymentMethod(entryType: string): boolean {
 
 export function isSpending(entryType: string): boolean {
   return SPENDING.includes(entryType)
+}
+
+export function hasShares(entryType: string): boolean {
+  return isSpending(entryType) || entryType === REFUND
 }
 
 export function categoryTypeOf(entryType: string): EntryTypeWithCategory | undefined {

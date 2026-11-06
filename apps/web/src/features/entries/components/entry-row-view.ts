@@ -91,7 +91,7 @@ function accountsOf(entry: ListedEntry, context: EntryRowContext): string | unde
       ? `${nameOf(from.accountId)}${messages.arrow}${nameOf(to.accountId)}`
       : undefined
   }
-  if (entry.entryType === 'card_purchase') {
+  if (entry.entryType === 'card_purchase' || entry.entryType === 'refund') {
     const card = entry.postings.find((posting) => posting.accountKind === CARD_KIND)
     return card && nameOf(card.accountId)
   }

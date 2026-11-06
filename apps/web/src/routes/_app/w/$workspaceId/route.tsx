@@ -35,6 +35,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       entryInvoice,
       entryContact,
       entryRepeat,
+      entryRefund,
       entryOccurrence,
       account: accountParam,
       accountFor,
@@ -79,6 +80,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
           permissions={access.permissions}
           isOpen={entry === 'new'}
           repeatEntryId={entryRepeat}
+          refundEntryId={entryRefund}
           occurrenceId={entryOccurrence}
           prefill={{
             entryType,
@@ -119,6 +121,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
                 entryInvoice: undefined,
                 entryContact: undefined,
                 entryRepeat: undefined,
+                entryRefund: undefined,
                 entryOccurrence: undefined,
               }),
             })

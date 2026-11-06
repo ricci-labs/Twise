@@ -57,6 +57,17 @@ export function MoneyFields({
       </>
     )
   }
+  if (entryType === 'refund') {
+    return (
+      <>
+        <CardField workspaceId={workspaceId} canCreateCards={canCreateCards} />
+        <CategoryField workspaceId={workspaceId} kind="expense_category" />
+        <p className="text-note text-ink-muted lg:col-span-2">
+          {entriesMessages.newEntry.refund.note}
+        </p>
+      </>
+    )
+  }
   if (entryType === 'opening_balance') {
     return null
   }

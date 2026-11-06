@@ -65,6 +65,7 @@ const ACCOUNT_NOT_AVAILABLE = 'ACCOUNT_NOT_AVAILABLE'
 const CONTACT_NOT_AVAILABLE = 'CONTACT_NOT_AVAILABLE'
 const INVOICE_CLOSED = 'INVOICE_CLOSED'
 const CARD_PURCHASE = 'card_purchase'
+const REFUND = 'refund'
 const OPENING_BALANCE = 'opening_balance'
 const SETTLEMENT = 'settlement'
 const CREDIT = 'credit'
@@ -101,7 +102,6 @@ export function EntryForm({
   const { isDirty } = useFormState({ control: form.control })
   const entryType = useWatch({ control: form.control, name: 'entryType' })
   const plan = useCardPlan(form.control, workspaceId, today)
-  const isCardPurchase = entryType === CARD_PURCHASE
   const amountWarning = useAmountWarning(form.control, workspaceId)
   const isSpendingEntry = isSpending(entryType)
   const shareTotals = useShareTotals(form.control)
@@ -191,7 +191,7 @@ export function EntryForm({
       return undefined
     }
     if (error.code === ACCOUNT_NOT_AVAILABLE) {
-      return isCardPurchase ? 'cardAccountId' : 'accountId'
+      return accountFieldOf(entryType)
     }
     if (error.code === CONTACT_NOT_AVAILABLE && entryType === SETTLEMENT) {
       return 'contactId'
@@ -349,11 +349,19 @@ function fieldMessageOf(field: keyof EntryFormInput, error: unknown): string {
     : errorMessageFor(error, { Conta: fields.paidFrom })
 }
 
+function isOnCard(entryType: FormEntryType): boolean {
+  return entryType === CARD_PURCHASE || entryType === REFUND
+}
+
+function accountFieldOf(entryType: FormEntryType): keyof EntryFormInput {
+  return isOnCard(entryType) ? 'cardAccountId' : 'accountId'
+}
+
 function savedOf(entryId: string, values: EntryFormValues): SavedEntry {
   return {
     entryId,
     description: values.description,
     amountCents: centsOfTypedAmount(values.amount) ?? 0,
-    accountId: values.entryType === CARD_PURCHASE ? values.cardAccountId : values.accountId,
+    accountId: isOnCard(values.entryType) ? values.cardAccountId : values.accountId,
   }
 }

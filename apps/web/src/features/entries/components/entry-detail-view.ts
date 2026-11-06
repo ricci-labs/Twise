@@ -159,6 +159,11 @@ function rowsOf(
       payment(entry),
       spender(entry, context),
     ],
+    refund: [
+      art('card', card),
+      invoice && { ...invoice, label: messages.rows.invoice },
+      categoryRow(category, context),
+    ],
     income: [art('receivedIn', receivedIn), categoryRow(category, context), payment(entry)],
     transfer: [payment(entry)],
     invoice_payment: [

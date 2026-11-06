@@ -91,6 +91,23 @@ describe('CARD-03 invoice detail', () => {
     await expect.element(page.getByText('Com a Conta X')).toBeVisible()
   })
 
+  it('shows a refund as a credit, named as such', async () => {
+    await openInvoice(OPEN_INVOICE, {
+      [`GET ${BASE}/cards/${CARD}/invoices/${OPEN_INVOICE}/lines`]: invoiceLinesAnswer(
+        manyInvoiceLines(1).map((line) => ({
+          ...line,
+          entryType: 'refund',
+          description: 'Estorno do tênis',
+          amountCents: -5_000,
+        })),
+      ),
+    })
+
+    await expect.element(page.getByText('Estorno do tênis')).toBeVisible()
+    await expect.element(page.getByText('Estorno', { exact: true })).toBeVisible()
+    await expect.element(page.getByText('−R$ 50,00')).toBeVisible()
+  })
+
   it('says so when the invoice does not exist', async () => {
     await openInvoice('00000000-0000-4000-8000-0000000000ff')
 

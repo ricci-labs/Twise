@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for accounts, categories, balances, cards and invoices — screens ACC-01..04 and CARD-01..04, with fields, actions, states, rules and errors.
 read_when: Designing or building accounts, categories, cards or invoice screens.
-updated: 2026-10-20
+updated: 2026-11-06
 ---
 
 # Accounts and cards
@@ -237,7 +237,7 @@ Route `/cartoes/:cardId/faturas/:invoiceId`. `GET …/invoices/:invoiceId/lines`
 time with "Mostrar mais" at the end (the desktop table too): date,
 category drawing, description (+ "1/3"), amount; "R$ 160,00 de terceiros" under the description
 when contacts owe part; payments negative in green with the `fatura-paga` drawing ("Pagamento",
-the account used). Tap a line → `ENT-03`.
+the account used); a refund negative in green too, "Estorno" under its description. Tap a line → `ENT-03`.
 **RF-CARD-5** Filters, asked of the API (`filter`): "Todas", "Só minhas" (lines with no part owed
 by contacts; payments show only under "Todas"), "Com terceiros" (lines with a part owed by
 contacts). "Ver todos ({n})" and "{n} lançamentos" count the whole invoice, not the page.

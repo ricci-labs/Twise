@@ -139,6 +139,7 @@ export type NewEntryProps = {
   isOpen: boolean
   prefill?: EntryPrefill
   repeatEntryId?: string
+  refundEntryId?: string
   occurrenceId?: string
   onClose: () => void
   onSaved?: (saved: SavedEntry) => void
@@ -605,6 +606,10 @@ export type DetailValueViewProps = {
 
 export type RepeatedEntryProps = NewEntryProps & {
   repeatEntryId: string
+}
+
+export type RefundedEntryProps = NewEntryProps & {
+  refundEntryId: string
 }
 
 export type EntryActionRequest =

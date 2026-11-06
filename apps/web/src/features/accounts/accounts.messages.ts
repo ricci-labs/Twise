@@ -373,6 +373,7 @@ export const accountsMessages = {
     seeAll: (count: number) => `Ver todos (${count})`,
     noLines: 'Nenhum lançamento nesta fatura.',
     payment: 'Pagamento',
+    refund: 'Estorno',
     paidWith: (account: string) => `Com a ${account}`,
     fronted: (amount: string) => `${amount} de terceiros`,
     installment: (number: number, count: number) => `${number}/${count}`,

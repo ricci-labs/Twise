@@ -464,8 +464,8 @@ updated: 2026-11-06
   - [x] An invoice line opens its entry (#475); "2 contatos" on the invoice, G80 (#477)
   - [x] "Ver todos nos lançamentos" on the contact, with the list filtered by contact (#476)
   - [x] Refund on a card, G14, without adjustment by the user's choice: API (#478)
-  - [ ] Refund on a card: the form, the entry and the invoice line
-  - [ ] Offsite backup on Cloudflare R2 (decision 8 below)
+  - [x] Refund on a card: the form, the entry and the invoice line
+  - [x] Offsite backup on Cloudflare R2: the setup script (decision 8 below); running it needs the user's token (`../operations/deploy.md`)
   - [x] Project skills (`db-migration`, `domain-rule`), stale marks in this file, local branches
 - **Left of Phase 1** (checked in the code on 2026-11-06): the WhatsApp channel and the agent (no code
   yet, and the photo attachment depends on them), `ATT-01` on the web (the API is ready; "Anexar
