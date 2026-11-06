@@ -28,6 +28,12 @@ function detailOf(badge: Element) {
   return badge.closest('[data-slot=badge]')?.parentElement as HTMLElement
 }
 
+const onOpen = vi.fn()
+
+function OpenButton(props: OpenItemRowLinkProps) {
+  return <button type="button" onClick={onOpen} {...props} />
+}
+
 describe('OpenItemRow', () => {
   it('shows the date block, the description, the detail and the amount, the date read first', async () => {
     const screen = await inList({})
@@ -63,10 +69,7 @@ describe('OpenItemRow', () => {
   })
 
   it('opens through the link element that wraps the row', async () => {
-    const onOpen = vi.fn()
-    function OpenButton(props: OpenItemRowLinkProps) {
-      return <button type="button" onClick={onOpen} {...props} />
-    }
+    onOpen.mockClear()
     const screen = await render(
       <ul>
         <OpenItemRow {...GROCERIES} link={<OpenButton />} />
