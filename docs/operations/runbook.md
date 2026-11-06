@@ -1,7 +1,7 @@
 ---
 summary: Bug-investigation playbook for Claude (ops scripts, order of checks) and procedures for known incidents.
 read_when: A bug report, an error ref from the user, an alert, or anything "not working" in production or dev.
-updated: 2026-09-27
+updated: 2026-11-06
 ---
 
 # Runbook
@@ -67,6 +67,10 @@ container.
    Without `RESTORE_CONFIRM` equal to the database name, the script refuses.
 4. Start the app and check `ops:health`. On boot the entrypoint applies any migrations newer than
    the dump.
+
+**From the offsite copy, when this server is gone:** install rclone on the new machine, create the
+same two remotes (`deploy.md` → Backups; the crypt remote takes the saved passphrase through
+`rclone obscure`), then `rclone copy twise-offsite: <folder>` and restore from that folder as above.
 
 ### Job did not run (Kuma heartbeat missing)
 `ops:logs --event job.run.failed`. Jobs are idempotent, so after the fix, run it by hand: `pnpm ops:job <name>` (or `--at <ISO time>` to run it as of another moment).

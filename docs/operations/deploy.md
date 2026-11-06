@@ -107,12 +107,20 @@ Crontab (vars in a mode-600 file outside the repo):
 30 3 * * * . "$HOME/.config/financas/backup.env" && "$HOME/projetos/financas/docker/backup/backup.sh" >>"$HOME/backups/financas/backup.log" 2>&1
 ```
 
-**Offsite copy, off until configured:** when `BACKUP_RCLONE_REMOTE` is set, the new files are
-copied there with `rclone copy`, and remote files older than `BACKUP_REMOTE_KEEP_DAYS` are deleted.
-rclone speaks S3-compatible buckets and OneDrive alike, so choosing the destination is a config
-change: install rclone, `rclone config` a remote, and set the var. Wrap the remote in an rclone
-`crypt` remote, so the provider only stores ciphertext. Local-only backups don't survive a disk
-failure, so this is the next step after the first deploy.
+**Offsite copy, on Cloudflare R2 (chosen 2026-11-06):** when `BACKUP_RCLONE_REMOTE` is set, the new
+files are copied there with `rclone copy`, and remote files older than `BACKUP_REMOTE_KEEP_DAYS` are
+deleted. Local-only backups don't survive a disk failure. rclone (installed in `~/.local/bin`, no
+sudo) encrypts through a `crypt` remote, so Cloudflare only stores ciphertext, with encrypted names.
+
+To set it up once:
+1. Cloudflare → R2 → create a private bucket (the free tier holds 10 GB).
+2. R2 → Manage API tokens → create a token with **Object Read & Write, only on that bucket**.
+3. On the server, in a real terminal, run `docker/backup/setup-offsite-r2.sh`. It asks for the account
+   ID, the bucket and the keys without echo, writes the two remotes to rclone's config (mode 600), sends
+   the latest dump and checks it arrived intact.
+4. **Save the passphrase it shows outside the server.** Without it, the offsite copies can't be read if
+   the server is lost. Only after you press Enter does it set `BACKUP_RCLONE_REMOTE` and rclone's folder
+   in `PATH` in the backup env file (cron's `PATH` doesn't have it).
 
 Restoring: `runbook.md` → Restore from a backup. The procedure was tested on the dev database
 (2026-09-27): the restored schema is identical to the source (`pg_dump --schema-only` diff), with the
