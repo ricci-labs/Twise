@@ -2,10 +2,16 @@ import type { EmailMessage } from '@api/core/email/email.types'
 import { renderEmail } from '@api/core/email/layout'
 import type {
   AccountExistsEmail,
+  DevicesLoggedOut,
   PasswordChangedEmail,
   PasswordResetEmail,
   VerificationEmail,
 } from '@api/modules/identity/identity.types'
+
+const DEVICES_LOGGED_OUT_TEXT: Readonly<Record<DevicesLoggedOut, string>> = {
+  all: 'de todos os aparelhos',
+  others: 'dos outros aparelhos',
+}
 
 export function emailVerificationMessage({
   recipient,
@@ -87,14 +93,16 @@ export function passwordResetMessage({ recipient, resetLink }: PasswordResetEmai
 export function passwordChangedMessage({
   recipient,
   forgotPasswordLink,
+  devicesLoggedOut,
 }: PasswordChangedEmail): EmailMessage {
+  const devices = DEVICES_LOGGED_OUT_TEXT[devicesLoggedOut]
   const rendered = renderEmail({
-    preheader: 'Saímos de todos os aparelhos por segurança.',
+    preheader: `Saímos ${devices} por segurança.`,
     illustration: 'padlock',
     greeting: `Olá, ${recipient.displayName}!`,
     heading: 'Sua senha foi trocada',
     paragraphs: [
-      'A senha da sua conta no Twise foi trocada, e saímos de todos os aparelhos por segurança.',
+      `A senha da sua conta no Twise foi trocada, e saímos ${devices} por segurança.`,
       'Se foi você, está tudo certo. Não precisa fazer nada.',
     ],
     action: { label: 'Não fui eu: trocar a senha', url: forgotPasswordLink },

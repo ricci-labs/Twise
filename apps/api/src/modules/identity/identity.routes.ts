@@ -131,7 +131,7 @@ export function identityRoutes(deps: IdentityRouteDeps) {
         const recipient = await resetPassword(deps.db, c.req.valid('json'), deps)
         clearSessionCookie(c, deps.cookie)
         deps.background.run(c.get('logger'), 'auth.password_changed_email', () =>
-          sendPasswordChangedEmail(recipient, deps),
+          sendPasswordChangedEmail(recipient, 'all', deps),
         )
         return c.body(null, NO_CONTENT)
       },
@@ -167,7 +167,7 @@ export function identityRoutes(deps: IdentityRouteDeps) {
           ...c.req.valid('json'),
         })
         deps.background.run(c.get('logger'), 'auth.password_changed_email', () =>
-          sendPasswordChangedEmail(recipient, deps),
+          sendPasswordChangedEmail(recipient, 'others', deps),
         )
         return c.body(null, NO_CONTENT)
       },

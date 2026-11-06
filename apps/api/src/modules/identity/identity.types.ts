@@ -115,9 +115,12 @@ export type PasswordResetEmail = {
   resetLink: string
 }
 
+export type DevicesLoggedOut = 'all' | 'others'
+
 export type PasswordChangedEmail = {
   recipient: EmailRecipient
   forgotPasswordLink: string
+  devicesLoggedOut: DevicesLoggedOut
 }
 
 export type AccountExistsEmail = {
