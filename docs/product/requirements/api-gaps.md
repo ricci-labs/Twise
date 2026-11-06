@@ -1,7 +1,7 @@
 ---
 summary: API gaps and defects found while writing the web requirements (2026-09-29) and each design round since (Home, new entry, accounts, entries list, planning, contacts, settings, "Posso comprar?") — errors that surface as 500, reads the screens need, overview fields the Home needs, and behaviours to decide — with the proposed fix and when.
 read_when: Planning the web work, fixing the API before a screen, or wondering why a requirement works around something.
-updated: 2026-10-30
+updated: 2026-11-06
 ---
 
 # API gaps found by the requirements
@@ -103,7 +103,7 @@ the Home round (`../roadmap.md`). Field names are the plan; the PR that adds one
 | G17 | An amount changed on one planned occurrence is lost when its recurrence changes (future pending occurrences are re-planned). | The UI warns. Option: keep edited amounts when re-planning. |
 | G18 | A deleted goal left in the commission split yields nothing and blocks saving the split until removed. | Remove the step when the goal is deleted, or refuse deleting a goal in use. |
 | G19 | Member notification preferences `notifyChannel`, `notifyDailyDigest`, `notifyBudgetThresholdPct` and `notifyVariableIncome` are stored but have no effect; reminders are always e-mail. | The UI shows only the lead time until each feature exists. |
-| G20 | The "senha trocada" e-mail says every session ended, but a change while logged in keeps the current one. | Two texts (reset vs change). |
+| G20 | ~~The "senha trocada" e-mail says every session ended, but a change while logged in keeps the current one.~~ **Fixed** (2026-11-06). | A reset says "de todos os aparelhos", a change while logged in "dos outros aparelhos". |
 | G21 | Deleting a contact has no balance check and no restore. | The UI warns when the contact owes. Option: refuse, or add a restore. |
 | G22 | Adding or removing a holiday doesn't move occurrences already planned. | The UI says so. Option: re-plan the affected rules. |
 | G23 | No route archives or deletes a workspace (`isArchived` is read only). | Later, with LGPD erasure. |

@@ -11,6 +11,7 @@ import {
 } from '@api/modules/identity/identity.repository'
 import type {
   AccountEmailDeps,
+  DevicesLoggedOut,
   EmailOnlyInput,
   EmailRecipient,
   ResetPasswordInput,
@@ -73,10 +74,13 @@ export async function resetPassword(
 
 export async function sendPasswordChangedEmail(
   recipient: EmailRecipient,
+  devicesLoggedOut: DevicesLoggedOut,
   deps: AccountEmailDeps,
 ): Promise<void> {
   const forgotPasswordLink = pageLink(deps.publicUrl, FORGOT_PASSWORD_PATH)
-  await deps.mailer.send(passwordChangedMessage({ recipient, forgotPasswordLink }))
+  await deps.mailer.send(
+    passwordChangedMessage({ recipient, forgotPasswordLink, devicesLoggedOut }),
+  )
 }
 
 function invalidLink(): ValidationError {

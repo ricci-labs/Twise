@@ -1,7 +1,7 @@
 ---
 summary: Design of the five account emails (verify, account exists, reset, password changed, invitation): layout, per-template copy and the renderEmail changes.
 read_when: Changing apps/api/src/core/email/layout.ts or any *.emails.ts.
-updated: 2026-10-01
+updated: 2026-11-06
 ---
 
 # Account emails
@@ -40,3 +40,5 @@ Footer: "**Twise** · Leve, claro, a dois." + why the email was sent. Light them
 | `workspace_invitation` | Você recebeu um convite no Twise | {inviter} convidou você para o espaço {workspace}. | convite | Oi! · {inviter} convidou você | Ver convite | "workspace" → "espaço"; paragraph "…para cuidarem juntos do dinheiro do mês." |
 
 Notes and validity lines stay as they are today in the API.
+
+`password_changed` after a change while logged in says "Saímos dos outros aparelhos", since the current session stays (G20); after a reset it says "de todos os aparelhos", as above.

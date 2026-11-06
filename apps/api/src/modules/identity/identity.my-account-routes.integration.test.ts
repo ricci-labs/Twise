@@ -70,7 +70,11 @@ describe('POST /api/auth/password/change', () => {
     expect((await login(session.email, PASSWORD)).status).toBe(401)
     expect((await login(session.email, NEW_PASSWORD)).status).toBe(200)
     expect(sent).toContainEqual(
-      expect.objectContaining({ template: 'password_changed', to: session.email }),
+      expect.objectContaining({
+        template: 'password_changed',
+        to: session.email,
+        text: expect.stringContaining('saímos dos outros aparelhos'),
+      }),
     )
   })
 
