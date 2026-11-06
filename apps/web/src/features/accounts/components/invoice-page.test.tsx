@@ -55,6 +55,9 @@ describe('CARD-03 invoice detail', () => {
     const shownLines = () => document.querySelectorAll('[data-slot=invoice-line]').length
 
     await expect.element(page.getByText('Compra 28', { exact: true })).toBeVisible()
+    await expect
+      .element(page.getByRole('link', { name: /Compra 28/ }))
+      .toHaveAttribute('href', expect.stringContaining('/entries/'))
     await expect.poll(shownLines).toBe(50)
     await page.getByRole('button', { name: 'Mostrar mais' }).click()
     await expect.poll(shownLines).toBe(60)

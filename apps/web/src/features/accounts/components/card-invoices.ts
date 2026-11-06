@@ -76,6 +76,7 @@ export function invoiceLinesOf(
     const isPayment = line.entryType === INVOICE_PAYMENT
     return {
       key: `${line.entryId}-${line.installmentNo ?? 0}-${position}`,
+      entryId: line.entryId,
       date: formatShortDate(line.occurredOn),
       description: isPayment ? messages.payment : line.description,
       icon: isPayment ? PAYMENT_ICON : (counterpart?.icon ?? null),

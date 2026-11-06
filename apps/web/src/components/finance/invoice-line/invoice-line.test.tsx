@@ -31,6 +31,23 @@ describe('InvoiceLine', () => {
     await expectNoAccessibilityViolations(screen.container)
   })
 
+  it('opens where its link goes, across the whole row', async () => {
+    const screen = await render(
+      <ul>
+        <InvoiceLine
+          date="22/10"
+          description="Tênis de corrida"
+          icon="leisure"
+          amountCents={33334}
+          link={<a href="#line" />}
+        />
+      </ul>,
+    )
+
+    await expect.element(screen.getByRole('link', { name: /Tênis de corrida/ })).toBeVisible()
+    await expectNoAccessibilityViolations(screen.container)
+  })
+
   it('cuts a long description and detail at two lines and keeps the amount whole', async () => {
     const screen = await render(
       <ul className="w-80">

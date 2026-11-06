@@ -176,7 +176,17 @@ function InvoiceLinesTable({ workspaceId, card, invoice }: InvoiceLinesTableProp
             key: line.key,
             cells: [
               line.date,
-              <DataTableName key="entry" name={line.description} icon={line.icon} />,
+              <DataTableName
+                key="entry"
+                name={line.description}
+                icon={line.icon}
+                link={
+                  <Link
+                    to="/w/$workspaceId/entries/$entry"
+                    params={{ workspaceId, entry: line.entryId }}
+                  />
+                }
+              />,
               line.installment ?? desktop.none,
               line.frontedCents > 0 ? formatBrl(line.frontedCents) : desktop.none,
               <DataTableAmount key="amount" cents={line.amountCents} />,

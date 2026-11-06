@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for accounts, categories, balances, cards and invoices — screens ACC-01..04 and CARD-01..04, with fields, actions, states, rules and errors.
 read_when: Designing or building accounts, categories, cards or invoice screens.
-updated: 2026-10-20
+updated: 2026-11-06
 ---
 
 # Accounts and cards
@@ -233,7 +233,7 @@ its header.
 ## CARD-03 Invoice detail (MVP)
 Route `/cartoes/:cardId/faturas/:invoiceId`. `GET …/invoices/:invoiceId/lines`.
 
-**RF-CARD-4** Header in a grid: total, paid, due, own, fronted, status. Lines newest first, 50 at a
+**RF-CARD-4** Header in a grid: total, paid, due, own, fronted, status. Each line opens its entry (`ENT-03`). Lines newest first, 50 at a
 time with "Mostrar mais" at the end (the desktop table too): date,
 category drawing, description (+ "1/3"), amount; "R$ 160,00 de terceiros" under the description
 when contacts owe part; payments negative in green with the `fatura-paga` drawing ("Pagamento",

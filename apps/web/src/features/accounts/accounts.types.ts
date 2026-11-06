@@ -424,6 +424,7 @@ export type CardInvoice = {
 
 export type InvoiceLineView = {
   key: string
+  entryId: string
   date: string
   description: string
   icon: string | null
@@ -520,15 +521,18 @@ export type InvoiceLinesState = {
 }
 
 export type InvoiceLinesBodyProps = {
+  workspaceId: string
   filter: InvoiceFilter
   lines: InvoiceLinesState
 }
 
 export type InvoiceLineListProps = {
+  workspaceId: string
   lines: readonly InvoiceLineView[]
 }
 
 export type PreviewBodyProps = {
+  workspaceId: string
   hasInvoice: boolean
   lines: readonly InvoiceLineView[] | undefined
 }

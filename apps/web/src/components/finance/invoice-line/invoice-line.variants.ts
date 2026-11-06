@@ -1,7 +1,9 @@
 import { cva } from 'class-variance-authority'
 
-export const invoiceLineVariants = cva(
-  'flex min-h-15 items-center gap-2.5 border-border py-2 not-first:border-t [&>[data-slot=category-art]]:-m-0.5',
+export const invoiceLineVariants = cva('border-border not-first:border-t')
+
+export const invoiceLineMainVariants = cva(
+  'flex min-h-15 items-center gap-2.5 py-2 text-ink outline-none focus-visible:ring-2 focus-visible:ring-focus-ring [&>[data-slot=category-art]]:-m-0.5',
 )
 
 export const invoiceLineDateVariants = cva(
