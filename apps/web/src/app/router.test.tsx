@@ -40,6 +40,8 @@ const inTheWorkspace = {
   [ACCESS]: workspaceAccess,
 }
 
+const QUIET_WAIT_MS = 300
+
 describe('app router', () => {
   afterEach(() => {
     vi.restoreAllMocks()
@@ -170,5 +172,24 @@ describe('app router', () => {
         screen.getByText('Você não tem permissão para isso. Peça a um administrador do espaço.'),
       )
       .toBeVisible()
+  })
+
+  it('refreshes the permissions only once when what it refetches is refused again', async () => {
+    const api = fakeApi({ ...inTheWorkspace })
+    const { app, screen } = await startAt('/')
+    await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
+    const denied = Response.json(
+      { error: { code: 'PERMISSION_DENIED', message: 'No', ref: 'abcd1234' } },
+      { status: 403 },
+    )
+    api.mockImplementation(() => Promise.resolve(denied.clone()))
+
+    await app.queryClient.refetchQueries()
+    await expect.poll(() => app.queryClient.isFetching()).toBe(0)
+    const settled = api.mock.calls.length
+    await new Promise((resolve) => setTimeout(resolve, QUIET_WAIT_MS))
+
+    expect(api.mock.calls.length).toBe(settled)
+    expect(document.querySelectorAll('[data-slot=toast]')).toHaveLength(1)
   })
 })

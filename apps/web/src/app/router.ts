@@ -7,7 +7,10 @@ import { createQueryClient } from '@web/lib/query-client'
 import { queryKeys, WORKSPACE_KEY_PREFIX } from '@web/lib/query-keys'
 import { routeTree } from '@web/routeTree.gen'
 
+const PERMISSIONS_REFRESH_PAUSE_MS = 30_000
+
 export function createApp(history?: RouterHistory) {
+  let permissionsRefreshedAt: number | null = null
   const queryClient = createQueryClient({
     onSessionRequired: () => endSession(),
     onPermissionDenied: (error) => refreshPermissions(error),
@@ -33,6 +36,14 @@ export function createApp(history?: RouterHistory) {
   }
 
   function refreshPermissions(error: unknown) {
+    const now = Date.now()
+    if (
+      permissionsRefreshedAt !== null &&
+      now - permissionsRefreshedAt < PERMISSIONS_REFRESH_PAUSE_MS
+    ) {
+      return
+    }
+    permissionsRefreshedAt = now
     showToast(errorMessageFor(error))
     void queryClient.invalidateQueries({ queryKey: queryKeys.workspaces })
     void queryClient.invalidateQueries({ queryKey: [WORKSPACE_KEY_PREFIX] })
