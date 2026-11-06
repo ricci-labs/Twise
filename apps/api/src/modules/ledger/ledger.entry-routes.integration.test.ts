@@ -483,6 +483,101 @@ async function walkTrash(path: string, limit = 2): Promise<string[]> {
   return walked
 }
 
+describe('refunds on a card', () => {
+  async function cardWithPurchase(name: string): Promise<string> {
+    const refundCard = await created(
+      owner.post(`${workspacePath}/cards`, { name, closingDay: 3, dueDay: 10 }),
+    )
+    await created(
+      owner.post(entriesPath, {
+        entryType: 'card_purchase',
+        occurredOn: '2026-10-05',
+        description: 'Tênis',
+        amountCents: 30_000,
+        installmentCount: 3,
+        cardAccountId: refundCard,
+        categoryId: groceriesId,
+      }),
+    )
+    return refundCard
+  }
+
+  async function invoicesOf(refundCard: string) {
+    return (await (await viewer.get(`${workspacePath}/cards/${refundCard}/invoices`)).json()) as {
+      referenceMonth: string
+      totalCents: number
+    }[]
+  }
+
+  function refundOn(refundCard: string, occurredOn: string, amountCents = 5_000) {
+    return {
+      entryType: 'refund',
+      occurredOn,
+      description: 'Estorno do tênis',
+      amountCents,
+      cardAccountId: refundCard,
+      categoryId: groceriesId,
+    }
+  }
+
+  it('reduces the invoice of its date and leaves the future installments alone', async () => {
+    const refundCard = await cardWithPurchase('Card Estorno')
+
+    const entryId = await created(owner.post(entriesPath, refundOn(refundCard, '2026-10-06')))
+
+    const totals = (await invoicesOf(refundCard)).map((invoice) => invoice.totalCents)
+    expect(totals).toEqual([5_000, 10_000, 10_000])
+    const entry = (await listed()).find((item) => item.id === entryId)
+    expect(entry?.amountCents).toBe(5_000)
+  })
+
+  it('goes on the open invoice when the invoice of its date is already closed', async () => {
+    const refundCard = await cardWithPurchase('Card Estorno Fechado')
+
+    await created(owner.post(entriesPath, refundOn(refundCard, '2026-09-20')))
+
+    const open = (await invoicesOf(refundCard)).find(
+      (invoice) => invoice.referenceMonth === '2026-11',
+    )
+    expect(open?.totalCents).toBe(5_000)
+  })
+
+  it('takes a contact part off what the contact owes', async () => {
+    const refundCard = await cardWithPurchase('Card Estorno Contato')
+    const contactResponse = await member.post(`${workspacePath}/contacts`, { name: 'Contact R' })
+    const { contactId } = (await contactResponse.json()) as { contactId: string }
+    await created(
+      member.post(entriesPath, {
+        ...expense('Jantar devolvido', '2026-10-06', 10_000),
+        shares: [{ contactId, amountCents: 4_000 }],
+      }),
+    )
+
+    await created(
+      owner.post(entriesPath, {
+        ...refundOn(refundCard, '2026-10-07', 3_000),
+        shares: [{ contactId, amountCents: 1_500 }],
+      }),
+    )
+
+    const balances = (await (await viewer.get(`${workspacePath}/contacts/balances`)).json()) as {
+      contactId: string
+      owedCents: number
+    }[]
+    expect(balances.find((balance) => balance.contactId === contactId)?.owedCents).toBe(2_500)
+  })
+
+  it('refuses a category that is not an expense', async () => {
+    const refundCard = await cardWithPurchase('Card Estorno Categoria')
+    const response = await owner.post(entriesPath, {
+      ...refundOn(refundCard, '2026-10-06'),
+      categoryId: salaryId,
+    })
+    expect(response.status).toBe(400)
+    expect(await response.json()).toMatchObject({ error: { code: 'NOT_AN_EXPENSE_CATEGORY' } })
+  })
+})
+
 describe('entries shared with contacts', () => {
   async function contact(name: string): Promise<string> {
     const response = await member.post(`${workspacePath}/contacts`, { name })

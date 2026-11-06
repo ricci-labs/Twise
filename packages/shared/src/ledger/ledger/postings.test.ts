@@ -669,3 +669,68 @@ describe('planPostings for a settlement (ledger.md example 4)', () => {
     expect(plan).toEqual({ ok: false, violation: 'NOT_A_MONEY_ACCOUNT' })
   })
 })
+
+describe('planPostings for refunds (ledger.md example 7)', () => {
+  const receivable: AccountRef = { id: 'receivable', kind: 'receivable' }
+  const target = { invoiceId: 'open-invoice', effectiveOn: '2026-11-10' }
+  const refund = (overrides: Partial<PlanOf<'refund'>> = {}): PlanOf<'refund'> => ({
+    entryType: 'refund',
+    occurredOn: DAY,
+    amountCents: 5_000,
+    card,
+    category: groceries,
+    target,
+    shares: [],
+    receivable: null,
+    ...overrides,
+  })
+
+  it('credits the card on the invoice and reduces the category', () => {
+    const plan = planPostings(refund())
+    if (!plan.ok) {
+      throw new Error(plan.violation)
+    }
+    expect(
+      plan.postings.map(({ accountId, amountCents, invoiceId, effectiveOn }) => [
+        accountId,
+        amountCents,
+        invoiceId,
+        effectiveOn,
+      ]),
+    ).toEqual([
+      ['card', 5_000, 'open-invoice', '2026-11-10'],
+      ['groceries', -5_000, null, '2026-11-10'],
+    ])
+  })
+
+  it('takes a contact part off what they owe', () => {
+    const plan = planPostings(
+      refund({ shares: [{ contactId: 'j', amountCents: 2_000 }], receivable }),
+    )
+    if (!plan.ok) {
+      throw new Error(plan.violation)
+    }
+    expect(
+      plan.postings.map(({ accountId, amountCents, contactId }) => [
+        accountId,
+        amountCents,
+        contactId,
+      ]),
+    ).toEqual([
+      ['card', 5_000, null],
+      ['groceries', -3_000, null],
+      ['receivable', -2_000, 'j'],
+    ])
+  })
+
+  it('refuses anything but a card and an expense category', () => {
+    expect(planPostings(refund({ card: checking }))).toEqual({
+      ok: false,
+      violation: 'NOT_A_CARD',
+    })
+    expect(planPostings(refund({ category: salary }))).toEqual({
+      ok: false,
+      violation: 'NOT_AN_EXPENSE_CATEGORY',
+    })
+  })
+})

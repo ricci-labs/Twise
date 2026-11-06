@@ -36,7 +36,11 @@ import type {
   RestoreRefusal,
   TrashedEntry,
 } from '@api/modules/ledger/ledger.types'
-import { planCardPurchase, planInvoicePayment } from '@api/modules/ledger/use-cases/card-entries'
+import {
+  planCardPurchase,
+  planInvoicePayment,
+  planRefund,
+} from '@api/modules/ledger/use-cases/card-entries'
 import { loadAccounts, pick } from '@api/modules/ledger/use-cases/lookups'
 import { refusingBrokenRules } from '@api/modules/ledger/use-cases/rules'
 import { currentWorkspaceDefaults } from '@api/modules/workspaces'
@@ -406,6 +410,8 @@ async function toEntryPlan(
   switch (input.entryType) {
     case 'card_purchase':
       return planCardPurchase(tx, workspaceId, input, today)
+    case 'refund':
+      return planRefund(tx, workspaceId, input, today)
     case 'invoice_payment':
       return planInvoicePayment(tx, input, today)
     case 'expense': {

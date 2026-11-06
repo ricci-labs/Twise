@@ -44,6 +44,16 @@ export type EntryPlan =
       receivable: AccountRef | null
     }
   | {
+      entryType: 'refund'
+      occurredOn: IsoDate
+      amountCents: Cents
+      card: AccountRef
+      category: AccountRef
+      target: InstallmentTarget
+      shares: ContactShare[]
+      receivable: AccountRef | null
+    }
+  | {
       entryType: 'invoice_payment'
       occurredOn: IsoDate
       amountCents: Cents

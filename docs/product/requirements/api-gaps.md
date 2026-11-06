@@ -98,7 +98,7 @@ the Home round (`../roadmap.md`). Field names are the plan; the PR that adds one
 |---|---|---|
 | G12 | Stored **invoice status** is refreshed only when a purchase or payment is recorded on that card, so the invoices list can show "Aberta" after closing. The UI computes the status itself. | Refresh on read, or a nightly job (planned in the ledger doc). |
 | G13 | An **archived card's invoices can't be paid** (the card counts as unavailable). | Allow invoice payments on archived cards. |
-| G14 | **Refund ("estorno") and adjustment** entries are not accepted, so a closed invoice can't be corrected as the ledger doc prescribes. | Implement `refund` (on the open invoice) before users need it. |
+| G14 | ~~**Refund ("estorno")** entries are not accepted, so a closed invoice can't be corrected as the ledger doc prescribes.~~ **Refund done** (2026-11-06). **Adjustment** stays out, by the product owner's choice. | Add `adjustment` if a real difference on an invoice ever needs it. |
 | G15 | `loan` accounts can be created but no entry type moves money in or out of them. | Hide the kind in the UI until a loan flow exists (done in `modules/accounts-and-cards.md`), or add the flow. |
 | G16 | A recurrence's `remindDaysBefore` is stored but unused (reminders use each member's lead time); `autoRecord` is phase 2. | The UI doesn't show them. Decide: drop the field, or make it override the member's lead time as the planning doc says. |
 | G17 | An amount changed on one planned occurrence is lost when its recurrence changes (future pending occurrences are re-planned). | The UI warns. Option: keep edited amounts when re-planning. |

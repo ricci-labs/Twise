@@ -1,7 +1,7 @@
 ---
 summary: The double-entry ledger — account kinds, cards and invoices, journal entries and postings, sign convention, DB-enforced invariants, correction policy (soft delete / replace), and worked examples.
 read_when: Anything that records, edits, reverses or reports money movements, cards or invoices.
-updated: 2026-10-30
+updated: 2026-11-06
 ---
 
 # Ledger (double-entry)
@@ -175,8 +175,9 @@ wallet, investment), `income`, `transfer` between two money accounts, `opening_b
 negative = overdraft, against the system account), `card_purchase` (1–48 installments on the
 card's invoices, payment method `credit` by default) and `invoice_payment` (partial payments
 allowed, from the card's payment account unless another money account is given) and
-`settlement` (a contact paying back: money account +, receivable − with the contact). Refunds and
-adjustments come later.
+`settlement` (a contact paying back: money account +, receivable − with the contact) and `refund`
+(a credit on a card, example 7; rules in `../billing-and-installments.md` → Refunds). Adjustments
+come later.
 
 Deleting or replacing an entry with a line on a closed invoice answers `409 ENTRY_ON_CLOSED_INVOICE`
 (checked before the database trigger that also refuses it); description and notes still change.

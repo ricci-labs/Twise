@@ -1,7 +1,7 @@
 ---
 summary: Rules for card invoices (closing/due), installment splitting, multi-party allocation, refunds, and competence vs cash views — with worked examples that double as test cases.
 read_when: Any code or question involving card invoices, installments, refunds, competence month or cash month.
-updated: 2026-10-14
+updated: 2026-11-06
 ---
 
 # Billing cycle and installments
@@ -165,8 +165,9 @@ R$ 1.000,00 in 3×, Contact J owes R$ 500,00 (rounding case):
 
 ## Refunds
 - A refund is a `refund` entry crediting the card on the **current open invoice** and reducing the same expense category (`model/ledger.md`, example 7).
-- If the original purchase had contact shares, the refund reduces them proportionally (reverse receivable lines), using the same allocation rule.
-- **Open question:** a refund of an installment purchase. Banks either credit everything at once or cancel the future installments. MVP proposal: credit the full amount on the open invoice and leave future installments alone. Revisit when a real case shows up.
+- A refund may carry contact shares: each takes that part off what the contact owes (a reverse receivable line, which counts like a payment), and the rest reduces the category. The person sets the parts; nothing links the refund to the original purchase.
+- A refund of an installment purchase (decided 2026-11-06): the amount typed is credited at once and future installments stay as they are, since banks vary and the invoice shows what really happened.
+- Which invoice: the one of the refund's date, or the current open one when that is already closed.
 
 ## Competence month vs cash month
 Every posting stores `effective_on`. For card installments it falls in the installment's invoice month.

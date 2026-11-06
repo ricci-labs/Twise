@@ -13,6 +13,7 @@ import type {
   CardPurchaseInput,
   CardSetup,
   InvoicePaymentInput,
+  RefundInput,
   WorkspaceCard,
 } from '@api/modules/ledger/ledger.types'
 import { loadAccounts, pick } from '@api/modules/ledger/use-cases/lookups'
@@ -54,6 +55,28 @@ export async function planCardPurchase(
       input,
       today,
     ),
+    shares: input.shares,
+    receivable: input.shares.length > 0 ? await findSystemAccount(tx, 'receivable') : null,
+  }
+}
+
+export async function planRefund(
+  tx: WorkspaceTransaction,
+  workspaceId: string,
+  input: RefundInput,
+  today: IsoDate,
+): Promise<EntryPlan> {
+  const accounts = await loadAccounts(tx, [input.cardAccountId, input.categoryId])
+  const card = pick(accounts, input.cardAccountId)
+  const setup = await cardSetupOf(tx, card)
+  await refreshInvoiceStatuses(tx, card.id, setup, today)
+  return {
+    entryType: 'refund',
+    occurredOn: input.occurredOn,
+    amountCents: input.amountCents,
+    card,
+    category: pick(accounts, input.categoryId),
+    target: await refundTarget(tx, { workspaceId, cardAccountId: card.id }, setup, input, today),
     shares: input.shares,
     receivable: input.shares.length > 0 ? await findSystemAccount(tx, 'receivable') : null,
   }
@@ -115,15 +138,38 @@ async function refreshInvoiceStatuses(
   }
 }
 
-async function installmentTargets(
+async function refundTarget(
+  tx: WorkspaceTransaction,
+  card: WorkspaceCard,
+  cycle: CardCycle,
+  input: RefundInput,
+  today: IsoDate,
+): Promise<InstallmentTarget> {
+  const onItsDate = invoiceRefOn(input.occurredOn, cycle)
+  const ref =
+    invoiceStatusOn(onItsDate, today, cycle) === 'closed' ? invoiceRefOn(today, cycle) : onItsDate
+  const [target] = await storedTargets(tx, card, cycle, [ref], today)
+  if (!target) {
+    throw new Error(`Invoice ${ref.referenceMonth} of card ${card.cardAccountId} is missing`)
+  }
+  return { invoiceId: target.id, effectiveOn: target.dueOn }
+}
+
+function invoiceRefOn(date: IsoDate, cycle: CardCycle): InvoiceRef {
+  const [ref] = invoicesForInstallments(date, cycle, 1)
+  if (!ref) {
+    throw new Error(`No invoice for ${date}`)
+  }
+  return ref
+}
+
+async function storedTargets(
   tx: WorkspaceTransaction,
   { workspaceId, cardAccountId }: WorkspaceCard,
   cycle: CardCycle,
-  input: CardPurchaseInput,
+  refs: readonly InvoiceRef[],
   today: IsoDate,
-): Promise<InstallmentTarget[]> {
-  const allRefs = invoicesForInstallments(input.occurredOn, cycle, input.installmentCount)
-  const refs = allRefs.slice(input.firstInstallment - 1)
+) {
   await insertInvoicesIfMissing(
     tx,
     refs.map((ref) => ({
@@ -135,13 +181,25 @@ async function installmentTargets(
       status: invoiceStatusOn(ref, today, cycle),
     })),
   )
-  const stored = await selectInvoicesOfMonths(tx, cardAccountId, refs.map(firstDayOf))
+  return selectInvoicesOfMonths(tx, cardAccountId, refs.map(firstDayOf))
+}
+
+async function installmentTargets(
+  tx: WorkspaceTransaction,
+  card: WorkspaceCard,
+  cycle: CardCycle,
+  input: CardPurchaseInput,
+  today: IsoDate,
+): Promise<InstallmentTarget[]> {
+  const allRefs = invoicesForInstallments(input.occurredOn, cycle, input.installmentCount)
+  const refs = allRefs.slice(input.firstInstallment - 1)
+  const stored = await storedTargets(tx, card, cycle, refs, today)
   const byMonth = new Map(stored.map((invoice) => [invoice.referenceMonth, invoice]))
 
   return refs.map((ref) => {
     const invoice = byMonth.get(firstDayOf(ref))
     if (!invoice) {
-      throw new Error(`Invoice ${ref.referenceMonth} of card ${cardAccountId} is missing`)
+      throw new Error(`Invoice ${ref.referenceMonth} of card ${card.cardAccountId} is missing`)
     }
     if (invoice.status === 'closed') {
       throw invoiceClosed(ref, firstOpenInstallment(allRefs, today, cycle))

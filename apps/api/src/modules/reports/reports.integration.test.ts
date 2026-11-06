@@ -297,6 +297,30 @@ describe('getPeriodOverview', () => {
     expect(metrics.committedAhead[0]?.plannedCents).toBe(200_000 + 3_990 + 2_000)
   })
 
+  it('counts a refund as less spent in the period its invoice is due', async () => {
+    const { workspaceId, userId, groceries, card } = await household()
+    const nextPeriod = { period: '2026-11' }
+    const spentNextPeriod = async () =>
+      (await getPeriodOverview(databases.app, workspaceId, nextPeriod, MID_OCTOBER)).metrics.spent
+    const before = await spentNextPeriod()
+
+    await recordEntry(
+      databases.app,
+      { workspaceId, userId, source: 'web' },
+      {
+        entryType: 'refund',
+        occurredOn: '2026-10-12',
+        description: 'Estorno',
+        amountCents: 1_500,
+        cardAccountId: card,
+        categoryId: groceries,
+      },
+      MID_OCTOBER,
+    )
+
+    expect(await spentNextPeriod()).toBe(before - 1_500)
+  })
+
   it('puts the ledger, the plan and the settings together for the current period', async () => {
     const { workspaceId, groceries, card, checking } = await household()
     const overview = await getPeriodOverview(databases.app, workspaceId, {}, MID_OCTOBER)

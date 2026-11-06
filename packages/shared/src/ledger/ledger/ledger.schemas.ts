@@ -83,6 +83,13 @@ export const entryInputSchema = z.discriminatedUnion('entryType', [
     shares: sharesSchema,
   }),
   entryDetailsSchema.extend({
+    entryType: z.literal('refund'),
+    amountCents: positiveCentsSchema,
+    cardAccountId: accountIdSchema,
+    categoryId: accountIdSchema,
+    shares: sharesSchema,
+  }),
+  entryDetailsSchema.extend({
     entryType: z.literal('invoice_payment'),
     amountCents: positiveCentsSchema,
     cardAccountId: accountIdSchema,
