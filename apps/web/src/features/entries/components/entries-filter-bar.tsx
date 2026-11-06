@@ -4,7 +4,10 @@ import { TextLink } from '@web/components/actions/text-link'
 import { CheckboxMenu } from '@web/components/inputs/checkbox-menu'
 import { FilterButton } from '@web/components/inputs/filter-button'
 import { PickerSheet } from '@web/components/inputs/picker-sheet'
-import { accountsQueryOptions } from '@web/features/entries/api/entries.queries'
+import {
+  accountsQueryOptions,
+  filterContactsQueryOptions,
+} from '@web/features/entries/api/entries.queries'
 import {
   accountItemsOf,
   categoryItemsOf,
@@ -30,10 +33,11 @@ const ONLY_SHARED = 'shared'
 
 export function EntriesFilterBar(props: EntriesFiltersProps) {
   const accounts = useQuery(accountsQueryOptions(props.workspaceId))
+  const contacts = useQuery(filterContactsQueryOptions(props.workspaceId, props.search.contactId))
   if (!accounts.data) {
     return null
   }
-  return <FilterBarButtons {...props} accounts={accounts.data} />
+  return <FilterBarButtons {...props} accounts={accounts.data} contacts={contacts.data ?? []} />
 }
 
 function FilterBarButtons({
@@ -41,9 +45,10 @@ function FilterBarButtons({
   onSearchChange,
   memberDirectory,
   accounts,
+  contacts,
   className,
 }: EntriesFilterBarButtonsProps) {
-  const values = filterBarValuesOf(search, namesOf(accounts, memberDirectory))
+  const values = filterBarValuesOf(search, namesOf(accounts, memberDirectory, contacts))
   const accountItems = useMemo(() => accountItemsOf(accounts), [accounts])
   const categoryItems = useMemo(() => categoryItemsOf(accounts), [accounts])
   const hasFilters = Object.values(values).some((value) => value !== undefined)
@@ -110,6 +115,14 @@ function FilterBarButtons({
           ],
         ]}
       />
+      {values.contactId && (
+        <FilterButton
+          label={messages.contact}
+          value={values.contactId}
+          hasMenu={false}
+          onClick={() => onSearchChange({ contactId: undefined })}
+        />
+      )}
       {hasFilters && (
         <TextLink
           render={<button type="button" />}

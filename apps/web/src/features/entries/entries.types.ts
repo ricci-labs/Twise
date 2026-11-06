@@ -461,6 +461,7 @@ export type EntriesHeadlineProps = EntriesListProps & {
 export type EntryFilterNames = {
   accounts: ReadonlyMap<string, LedgerAccount>
   members: ReadonlyMap<string, string>
+  contacts: ReadonlyMap<string, string>
 }
 
 export type EntriesFiltersProps = Pick<
@@ -472,9 +473,13 @@ export type EntriesFiltersProps = Pick<
 
 export type EntriesFilterBarButtonsProps = EntriesFiltersProps & {
   accounts: readonly LedgerAccount[]
+  contacts: readonly FilterContact[]
 }
 
+export type FilterContact = { id: string; name: string }
+
 export type EntryFilterBarValues = {
+  contactId: string | undefined
   types: string | undefined
   accountId: string | undefined
   categoryId: string | undefined

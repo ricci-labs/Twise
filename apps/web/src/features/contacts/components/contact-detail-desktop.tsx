@@ -2,6 +2,7 @@ import { formatBrl, type IsoDate, todayIn } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
+import { TextLink } from '@web/components/actions/text-link'
 import { Card } from '@web/components/display/card'
 import { DateBlock } from '@web/components/display/date-block'
 import { ListSkeleton } from '@web/components/feedback/list-skeleton'
@@ -138,7 +139,23 @@ function ContactPaymentsCard({ workspaceId, contactId }: ContactPaymentsCardProp
   return (
     <Card title={messages.payments}>
       {receipts.data ? (
-        <ContactPaymentsList receipts={receipts.data} facts={facts} />
+        <>
+          <ContactPaymentsList receipts={receipts.data} facts={facts} />
+          {receipts.data.length > 0 && (
+            <TextLink
+              className="mt-3 text-label"
+              render={
+                <Link
+                  to="/w/$workspaceId/entries"
+                  params={{ workspaceId }}
+                  search={{ contactId }}
+                />
+              }
+            >
+              {messages.allInEntries}
+            </TextLink>
+          )}
+        </>
       ) : (
         <ListSkeleton rows={LOADING_ROWS} />
       )}
