@@ -1,7 +1,7 @@
 ---
 summary: Production setup on Dokploy — containers, image, env vars, resources, logs rotation, backups (offsite destination later), access through Cloudflare Tunnel + Access on the user's domain, first-deploy steps and checklist.
 read_when: Deploying, changing env vars or runtime config, setting up backups, or exposing the app.
-updated: 2026-10-02
+updated: 2026-11-06
 ---
 
 # Deploy
@@ -241,8 +241,8 @@ Status of the first deploy (2026-09-28). Open items are left for later on purpos
 - [x] Env vars set; the app boots and `/api/health/ready` is 200
 - [x] Migrations applied on boot by the entrypoint
 - [x] Volume mounted at `/data/files` for attachments
-- [ ] SMTP mailbox credentials (`SMTP_USER`, `SMTP_PASSWORD`) set, then redeploy
-- [ ] First user created: `docker exec -it <container> node dist/ops/create-user.mjs` (asks for the email, display name, workspace name and password; the password is typed without echo, never passed as an argument)
+- [x] SMTP mailbox credentials (`SMTP_USER`, `SMTP_PASSWORD`) set; notifications sent (checked 2026-11-06)
+- [x] First user created (checked 2026-11-06): `docker exec -it <container> node dist/ops/create-user.mjs` (asks for the email, display name, workspace name and password; the password is typed without echo, never passed as an argument)
 - [ ] WhatsApp paired from the bot phone (with the agent)
 - [x] Uptime Kuma monitors: HTTP on the internal address `http://<app name>:3100/api/health/ready` (every 60 s, 2 retries), and a push monitor for the backup (every 90000 s; its URL, through Kuma's Traefik hostname, in the backup env file as `BACKUP_KUMA_PUSH_URL`)
 - [ ] Alert channel for Kuma chosen (not WhatsApp)

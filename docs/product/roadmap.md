@@ -1,7 +1,7 @@
 ---
 summary: Phases, MVP scope, current focus and the list of open questions.
 read_when: Deciding what to build next, checking whether something is in scope, or resuming work in a new session.
-updated: 2026-10-30
+updated: 2026-11-06
 ---
 
 # Roadmap
@@ -54,10 +54,10 @@ updated: 2026-10-30
   10b. [x] Invitation routes: preview, accept (email must match)
   10c. [x] Invitation routes: accept with sign-up
   Along the way: strict file roles, Claude Code hooks and the `new-module` / `pr` skills (#43–#46).
-- [ ] **Backend completion** (chosen 2026-09-26): finish the whole domain backend before the
+- [x] **Backend completion** (chosen 2026-09-26): finish the whole domain backend before the
   frontend; the web comes next, and the WhatsApp channel with the agent comes last, reusing the
   services. Small PRs, in order:
-  1. [ ] **Gaps in what exists** (tables already exist):
+  1. [x] **Gaps in what exists** (tables already exist):
      - [x] Workspaces: create through the API, rename, settings (financial period, currency,
            installment view, budget base…)
      - [x] Members: list, change role, remove, leave (owner rules, last owner kept)
@@ -113,7 +113,7 @@ updated: 2026-10-30
            `recordAudit`, `GET /audit`, entries audited
      - [x] Audit the other writes: accounts, cards, contacts, charges, planning, attachments
      - [x] Audit settings, members, roles and invitations
-  7. [ ] **Observability core and deploy** (started 2026-09-27; decisions 7, 8 and 10 below):
+  7. [x] **Observability core and deploy** (started 2026-09-27; decisions 7, 8 and 10 below):
      - [x] Decisions and plan (this list)
      - [x] Metrics: OTel metrics SDK + Prometheus exporter on `:9464`, the metric registry, HTTP,
            job and notification metrics (error metrics come with the fingerprints)
@@ -194,7 +194,7 @@ updated: 2026-10-30
       viewer, section error) and first run
   17. [x] Web: Home motion (`../design/home/motion.md`)
   18. [x] Public demo page `/demo` on the demo household (asked by the user 2026-10-09)
-- [ ] **New entry round: ENT-02** (design `../design/entries/`, exported 2026-10-10; the user asked on
+- [x] **New entry round: ENT-02** (design `../design/entries/`, exported 2026-10-10; the user asked on
   2026-10-14 for the whole round, each PR merged by Claude when CI is green, and a review at the
   end; order docs → API → components → screen, one PR each):
   1. [x] Design package in `docs/design/entries/` and the loose illustrations
@@ -223,11 +223,10 @@ updated: 2026-10-30
       half and "Dividir igualmente" splits between you and them, the rounding cents staying in
       "Sua parte" (shared `equalShares` / `halfShares`); saving waits while the sum passes the
       total). "Novo contato" in the picker (`CON-05`) came with the contacts round
-  13. [ ] Web: income, transfer (and from `HOME-03`), invoice payment, settlement, opening balance
+  13. [x] Web: income, transfer (and from `HOME-03`), invoice payment, settlement, opening balance
       - [x] Income ("Recebido em", the income categories with their "Fixa" / "Variável" badge) and
-        transfer ("De" and "Para", never the same account); waiting on `HOME-03`: the "Ver
-        sugestão de divisão" toast after a variable income and the transfer prefilled from the
-        split
+        transfer ("De" and "Para", never the same account); the "Ver sugestão de divisão" toast and
+        the transfer prefilled from the split came with `HOME-03`
       - [x] "Mais" ("Outros tipos" with their drawings; the pill then shows the chosen type) and
         the opening balance ("Conta" first with its kind, "Saldo" with "Negativo (cheque
         especial)", description "Saldo inicial"); opens on an account from
@@ -247,7 +246,7 @@ updated: 2026-10-30
       while typing; both fill what was used last time and say so with "Desfazer")
   16. [x] Web: the Home follows the app-wide rules (loose illustrations, no circles; the budgets
       already do, through `CategoryArt`); its top, cards and first run measured again on the PNGs
-- [ ] **Accounts round: ACC-01..04 and CARD-01..04** (design `../design/accounts/`, exported
+- [x] **Accounts round: ACC-01..04 and CARD-01..04** (design `../design/accounts/`, exported
   2026-10-14; the user asked for the same flow as the new entry round: one PR per step, merged by
   Claude when CI is green, every screen checked side by side with its PNG):
   1. [x] Design package in `docs/design/accounts/`, the system illustrations, the updated "Mais"
@@ -258,17 +257,17 @@ updated: 2026-10-30
      invoice line's counterpart account (G43)
   3. [x] Web components 1–8 of `../design/accounts/components.md` (rows, groups, KPI carousel,
      action sheet and menu, undo toast, refused-action dialog, archived toggle, list states)
-  4. [ ] Web: `ACC-01` with every state (done: summary, groups, archived, actions with undo and the
+  4. [x] Web: `ACC-01` with every state (done: summary, groups, archived, actions with undo and the
      refused delete, loading, empty, error, viewer; the phone's top and bottom bars to the approved
      model), `ACC-03` (done: new and edit account, "Nova conta" links, "Cadastrar conta" in the new
      entry's empty sheet, the "{nome} criada" sheet and "Informar saldo inicial" in the account's
-     actions, both opening the new entry as its opening balance; "Ver lançamentos" waits on
+     actions, both opening the new entry as its opening balance; "Ver lançamentos" came with
      `ENT-01`), `ACC-04` (done: list, restore with "Ver", "Restaurar as duas",
      empty and error)
   5. [x] Web: `ACC-02` with subcategories and every subcategory action (tree, income natures,
      archive with the children, refused delete, move, archived, viewer), `ACC-03` for categories
      (new, new subcategory, edit, the locked "Dentro de", the income nature)
-  6. [ ] Web: `CARD-01` (done: one block per card, archived cards, "Ver faturas", archive and
+  6. [x] Web: `CARD-01` (done: one block per card, archived cards, "Ver faturas", archive and
      delete with undo and the refused delete, empty, viewer, loading, error), `CARD-02` (done:
      strip, year sheet, summary with the future and paid notes, first lines), `CARD-03` (done:
      header, closed note, filters, not found), `CARD-04` (done: new and edit card, the day sheet,
@@ -283,8 +282,7 @@ updated: 2026-10-30
      row, the "Novo cartão" tile closing the last row, "Próximas faturas" from
      `GET /cards/invoices/upcoming`, with "Pagar" on the open ones). `CARD-02`
      and `CARD-03` as one desktop page (path, the wide month strip, four KPIs of the chosen
-     invoice, the lines table with its filters, "Pagar fatura"); the "2 contatos" badge (needs the
-     contacts of each line) and opening an entry from its line come later. `CARD-04` as the
+     invoice, the lines table with its filters, "Pagar fatura"); the "2 contatos" badge (G80) and opening an entry from its line came with the closing round. `CARD-04` as the
      760 px dialog in two columns. `ACC-04` with the path "Contas e categorias › Lixeira", the
      page title and the list in a card
   8. [x] Fixes to merged work from this round's review: no circles in the Home, the one selection
@@ -458,7 +456,20 @@ updated: 2026-10-30
       the desktop work screen
   12. [x] Review of the round against every PNG (#467–#470: settings, members, account, history and
       the tab marks; the API's roles order fixed on the way, #468)
-- [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
+- [ ] **Phase 1 closing round** (asked by the user on 2026-11-06, after reading the project against
+  this plan): small gaps, cleanup and what keeps the app safe to use, before the WhatsApp channel:
+  - [x] Tests no longer depend on today (#472)
+  - [x] "De todos" or "dos outros aparelhos" in the password e-mail, G20 (#473)
+  - [x] Reminder e-mails open the bill or the invoice, G10 (#474)
+  - [x] An invoice line opens its entry (#475); "2 contatos" on the invoice, G80 (#477)
+  - [x] "Ver todos nos lançamentos" on the contact, with the list filtered by contact (#476)
+  - [x] Refund on a card, G14, without adjustment by the user's choice: API (#478)
+  - [ ] Refund on a card: the form, the entry and the invoice line
+  - [ ] Offsite backup on Cloudflare R2 (decision 8 below)
+  - [x] Project skills (`db-migration`, `domain-rule`), stale marks in this file, local branches
+- **Left of Phase 1** (checked in the code on 2026-11-06): the WhatsApp channel and the agent (no code
+  yet, and the photo attachment depends on them), `ATT-01` on the web (the API is ready; "Anexar
+  comprovante" still opens "Em breve") and charge reminders (`charge_reminder` is never queued)
 
 ## Phase 1: MVP
 Goal: the couple records everything through WhatsApp and the web, and always knows how much is still free to spend.
@@ -492,12 +503,12 @@ Goal: the couple records everything through WhatsApp and the web, and always kno
 
 ## Open questions
 1. Real data for the couple's setup (accounts, cards, closing/due days, pay days): collected at onboarding, stored only in the DB, never in the repo.
-2. Refund of installment purchases (`../domain/billing-and-installments.md`).
+2. ~~Refund of installment purchases~~: the amount is credited at once and future installments stay (2026-11-06, `../domain/billing-and-installments.md`).
 3. ~~Web auth method~~: password with server-side sessions, sign-up switch, reset by email (ADR 0021, ADR 0022).
 4. Transcription for audio: local whisper.cpp vs external API.
 5. Model for the agent: default `claude-opus-5`; test cheaper models once real message samples exist.
 6. Alert channel (ntfy, Telegram, email). Must not be WhatsApp.
 7. ~~Remote access~~: **Cloudflare Tunnel + Cloudflare Access** (2026-09-27): any browser, no app to install, a one-time email code before the app's login; deploys are started from Dokploy (`../operations/deploy.md`).
-8. Offsite backup destination: the structure is ready (an rclone remote, off until set, 2026-09-27). Choose later between an S3-compatible bucket with a good free tier and the user's OneDrive.
+8. ~~Offsite backup destination~~: **Cloudflare R2**, chosen by the user on 2026-11-06, encrypted with an rclone `crypt` remote.
 9. Anti-ban practices for charges sent to contacts.
 10. ~~Email provider~~: **DreamHost SMTP** (2026-09-27), set through the `SMTP_*` env vars at deploy time. The sender domain needs SPF/DKIM, which DreamHost provides for domains it hosts.

@@ -1,7 +1,7 @@
 ---
 summary: How Claude works in this repo — project skills, Claude Code hooks, and the standard loop for a change.
 read_when: Starting any development task, creating or editing a skill or hook, or when unsure which procedure to follow.
-updated: 2026-10-01
+updated: 2026-11-06
 ---
 
 # Claude workflow
@@ -22,8 +22,8 @@ Skills encode repeatable procedures so they come out the same way every time.
 | `adr` | ✅ available | Writes a new ADR from the template and updates the index |
 | `new-module` | ✅ available | Creates an API module with the fixed file set, schemas in shared, routes behind session and permission checks, dependency rules and docs |
 | `new-agent-tool` | planned (needs scaffold) | Zod schema in shared → tool file → registration → eval cases → table in `../integrations/ai-agent.md` |
-| `db-migration` | planned (needs scaffold) | Edit table → `drizzle-kit generate` → SQL review checklist → stop and ask on destructive changes |
-| `domain-rule` | planned (needs scaffold) | Example in the domain doc → failing test → implementation → docs |
+| `db-migration` | ✅ available | Edit table → `drizzle-kit generate` → SQL review checklist → stop and ask on destructive changes |
+| `domain-rule` | ✅ available | Example in the domain doc → failing test → implementation → docs |
 | `pr` | ✅ available | Runs every check, reviews the diff against the conventions, proves new rules can fail, writes the PR from the template, waits for CI, merges when authorized |
 | `new-component` | ✅ available | Creates a design-system component: shadcn primitive if needed, the folder and file set, the `cva` recipe, examples for every state of the brief, browser tests with axe, the workbench entry (`../architecture/web-components.md`) |
 | `new-feature` | ✅ available | Creates a web feature from a screen spec: folder, query options and mutation hooks, messages, thin route with guard and loader, every state of the spec, tests (`../architecture/web-application.md`) |
