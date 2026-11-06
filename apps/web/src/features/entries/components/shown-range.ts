@@ -56,7 +56,7 @@ export function searchTextOf(search: EntriesListSearch): string | undefined {
 
 export function listFilterOf(search: EntriesListSearch, shown: ShownRange): EntryFilter {
   const q = searchTextOf(search)
-  const isEverywhere = q !== undefined && search.everywhere === true
+  const isEverywhere = (q !== undefined && search.everywhere === true) || Boolean(search.contactId)
   const { from, to } =
     shown.kind === 'period' ? { from: shown.period.start, to: shown.period.end } : shown
   return {
@@ -67,6 +67,7 @@ export function listFilterOf(search: EntriesListSearch, shown: ShownRange): Entr
     categoryId: search.categoryId,
     spentByUserId: search.spentBy,
     shared: search.shared,
+    contactId: search.contactId,
   }
 }
 
@@ -76,7 +77,8 @@ export function hasFiltersIn(search: EntriesListSearch): boolean {
       search.accountId ||
       search.categoryId ||
       search.spentBy ||
-      search.shared,
+      search.shared ||
+      search.contactId,
   )
 }
 

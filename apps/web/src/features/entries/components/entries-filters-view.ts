@@ -7,6 +7,7 @@ import type {
   EntriesListSearch,
   EntryFilterBarValues,
   EntryFilterNames,
+  FilterContact,
   LedgerAccount,
 } from '@web/features/entries/entries.types'
 
@@ -26,6 +27,7 @@ export function filterChipsOf(search: EntriesListSearch, names: EntryFilterNames
     ...optionalChip('categoryId', search.categoryId && categoryChipOf(search.categoryId, names)),
     ...optionalChip('spentBy', search.spentBy && names.members.get(search.spentBy)),
     ...optionalChip('shared', search.shared && messages.sharedChip),
+    ...optionalChip('contactId', contactNameOf(search, names)),
   ]
 }
 
@@ -43,6 +45,11 @@ export const NO_FILTERS: Partial<EntriesListSearch> = {
   categoryId: undefined,
   spentBy: undefined,
   shared: undefined,
+  contactId: undefined,
+}
+
+function contactNameOf(search: EntriesListSearch, names: EntryFilterNames): string | undefined {
+  return search.contactId && (names.contacts.get(search.contactId) ?? messages.contact)
 }
 
 function categoryChipOf(categoryId: string, names: EntryFilterNames): string | undefined {
@@ -64,10 +71,12 @@ function optionalChip(value: string, label: string | false | undefined): FilterC
 export function namesOf(
   accounts: readonly LedgerAccount[],
   memberDirectory: EntriesFiltersProps['memberDirectory'],
+  contacts: readonly FilterContact[] = [],
 ): EntryFilterNames {
   return {
     accounts: new Map(accounts.map((account) => [account.id, account])),
     members: new Map(memberDirectory.map((member) => [member.userId, member.displayName])),
+    contacts: new Map(contacts.map((contact) => [contact.id, contact.name])),
   }
 }
 
@@ -109,6 +118,7 @@ export function filterBarValuesOf(
     accountId: search.accountId && names.accounts.get(search.accountId)?.name,
     categoryId: search.categoryId && categoryChipOf(search.categoryId, names),
     spentBy: spentBy.length > 0 ? spentBy.join(' · ') : undefined,
+    contactId: contactNameOf(search, names),
   }
 }
 

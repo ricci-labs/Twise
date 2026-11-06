@@ -15,9 +15,19 @@ const NAMES = {
     ].map((item) => [item.id, item]),
   ),
   members: new Map([['user-b', 'Member B']]),
+  contacts: new Map([['contact-j', 'Contato J']]),
 }
 
 describe('filterChipsOf', () => {
+  it('names the contact, and still shows the filter when the name is not known', () => {
+    expect(filterChipsOf({ contactId: 'contact-j' }, NAMES).map((chip) => chip.label)).toEqual([
+      'Contato J',
+    ])
+    expect(filterChipsOf({ contactId: 'gone' }, NAMES).map((chip) => chip.label)).toEqual([
+      'Contato',
+    ])
+  })
+
   it('names each active filter, a parent category with its subcategories', () => {
     expect(
       filterChipsOf(

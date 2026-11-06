@@ -348,6 +348,9 @@ describe('CON-02 contact detail', () => {
       await expect.element(payments.getByText('Pagamento de cobrança')).toBeVisible()
       await expect.element(payments.getByText('Cobrança de 12/09 · Conta X')).toBeVisible()
       await expect.element(payments.getByText('Recebimento de contato')).toBeVisible()
+      await expect
+        .element(page.getByRole('link', { name: 'Ver todos nos lançamentos' }))
+        .toHaveAttribute('href', expect.stringContaining('contactId='))
       await expect.element(payments.getByText('Sem cobrança · Conta X')).toBeVisible()
       await expect.element(payments.getByText(/^\+R\$\s90,00$/)).toBeVisible()
       const entriesCall = fetchSpy.mock.calls

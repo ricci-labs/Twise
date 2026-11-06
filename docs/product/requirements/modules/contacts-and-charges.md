@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for contacts, what each owes (shares and balances), charges with the pt-BR message and Pix copia e cola, sending them (WhatsApp, e-mail or copy), recording payments and cancelling — screens CON-01..05.
 read_when: Designing or building contacts, charges or anything showing what third parties owe.
-updated: 2026-10-18
+updated: 2026-11-06
 ---
 
 # Contacts and charges
@@ -123,7 +123,7 @@ and the actions in a grid (the primary full width, the two others side by side, 
 de novo" · "Pelo WhatsApp" · "Corrigir e-mail"; viewers "Copiar mensagem" · "Copiar Pix". The open
 charge's header carries the "⋯" (Copiar mensagem, Anexar comprovante, Cancelar cobrança).
 **Desktop:** two columns: left the amount, "Em aberto" and the charges; right "Falar com", the
-receipt-without-charge shortcut and "Pagamentos recebidos" (the contact's settlement entries).
+receipt-without-charge shortcut and "Pagamentos recebidos" (the contact's settlement entries), with "Ver todos nos lançamentos" opening `ENT-01` on the contact's whole history (`contactId`, removable like any filter).
 "Nova cobrança" in the page header.
 
 | Action | Permission | Rule |

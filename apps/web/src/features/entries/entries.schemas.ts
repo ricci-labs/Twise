@@ -185,6 +185,7 @@ export const entriesListSearchSchema = z.object({
   categoryId: z.uuid().optional().catch(undefined),
   spentBy: z.uuid().optional().catch(undefined),
   shared: z.boolean().optional().catch(undefined),
+  contactId: z.uuid().optional().catch(undefined),
   back: z.enum(['accounts', 'categories']).optional().catch(undefined),
 })
 

@@ -58,6 +58,16 @@ describe('listFilterOf', () => {
     expect(listFilterOf({ q: 'merc', everywhere: true }, october)).toMatchObject({ q: 'merc' })
     expect(listFilterOf({ q: 'merc', everywhere: true }, october).from).toBeUndefined()
   })
+
+  it('looks at the whole history of a contact, whatever the period', () => {
+    if (!october) {
+      throw new Error('no period')
+    }
+    const filter = listFilterOf({ contactId: 'contact-j' }, october)
+    expect(filter).toMatchObject({ contactId: 'contact-j' })
+    expect(filter).not.toHaveProperty('from')
+    expect(filter).not.toHaveProperty('to')
+  })
 })
 
 describe('presetRangeOf', () => {

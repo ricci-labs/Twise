@@ -127,6 +127,7 @@ export const contactsMessages = {
     receiptButton: 'Registrar recebimento',
     payments: 'Pagamentos recebidos',
     paymentsEmpty: 'Nenhum pagamento recebido ainda.',
+    allInEntries: 'Ver todos nos lançamentos',
     paymentsFailed: 'Não foi possível carregar os pagamentos.',
     chargePayment: 'Pagamento de cobrança',
     contactReceipt: 'Recebimento de contato',

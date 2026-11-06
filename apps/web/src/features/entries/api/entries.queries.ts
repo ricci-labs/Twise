@@ -87,6 +87,10 @@ export function contactsQueryOptions(workspaceId: string) {
   })
 }
 
+export function filterContactsQueryOptions(workspaceId: string, contactId: string | undefined) {
+  return { ...contactsQueryOptions(workspaceId), enabled: Boolean(contactId) }
+}
+
 export function membersQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'members'] as const,

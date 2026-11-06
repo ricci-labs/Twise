@@ -464,6 +464,7 @@ export const entriesMessages = {
       everyone: 'Todos',
       shared: 'Só os divididos com contatos',
       sharedChip: 'Divididos com contatos',
+      contact: 'Contato',
       withChildren: (name: string) => `${name} e subcategorias`,
       clearAll: 'Limpar tudo',
       apply: 'Ver resultados',

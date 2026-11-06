@@ -55,6 +55,7 @@ const NO_FILTERS = {
   categoryId: undefined,
   spentBy: undefined,
   shared: undefined,
+  contactId: undefined,
 }
 
 export function EntriesList(props: EntriesListProps) {

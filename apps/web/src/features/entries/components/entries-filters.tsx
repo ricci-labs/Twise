@@ -10,7 +10,10 @@ import { PickerSheet } from '@web/components/inputs/picker-sheet'
 import { Switch } from '@web/components/inputs/switch'
 import { ToggleChips } from '@web/components/inputs/toggle-chips'
 import { Sheet } from '@web/components/layout/sheet'
-import { accountsQueryOptions } from '@web/features/entries/api/entries.queries'
+import {
+  accountsQueryOptions,
+  filterContactsQueryOptions,
+} from '@web/features/entries/api/entries.queries'
 import {
   accountItemsOf,
   categoryItemsOf,
@@ -37,9 +40,10 @@ const EVERYONE = ''
 export function EntriesFilterButton(props: EntriesFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
   const accounts = useQuery(accountsQueryOptions(props.workspaceId))
+  const contacts = useQuery(filterContactsQueryOptions(props.workspaceId, props.search.contactId))
   const count = filterChipsOf(
     props.search,
-    namesOf(accounts.data ?? [], props.memberDirectory),
+    namesOf(accounts.data ?? [], props.memberDirectory, contacts.data),
   ).length
   return (
     <>
@@ -80,9 +84,13 @@ export function EntriesFilterButton(props: EntriesFiltersProps) {
 export function EntriesFilterChips(props: EntriesFiltersProps) {
   const accounts = useQuery(accountsQueryOptions(props.workspaceId))
   const { search, onSearchChange } = props
+  const contacts = useQuery(filterContactsQueryOptions(props.workspaceId, search.contactId))
   return (
     <FilterChips
-      chips={filterChipsOf(search, namesOf(accounts.data ?? [], props.memberDirectory))}
+      chips={filterChipsOf(
+        search,
+        namesOf(accounts.data ?? [], props.memberDirectory, contacts.data),
+      )}
       onRemove={(chip) => onSearchChange(withoutChip(search, chip))}
       onClear={() => onSearchChange(NO_FILTERS)}
       className={props.className}
