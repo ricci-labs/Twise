@@ -1,7 +1,7 @@
 ---
 summary: Coding conventions — naming, money, dates, IDs, errors, validation, tests, migrations, commits.
 read_when: Writing or reviewing any code.
-updated: 2026-10-16
+updated: 2026-11-06
 ---
 
 # Conventions
@@ -198,6 +198,7 @@ without comments.
 - **Tests are independent:** each test creates the users it changes, so order doesn't matter. Never start two DB operations without awaiting the first (they would run as parallel transactions).
 - For a DB rule (trigger, policy, constraint), prove the test can fail: disable the rule locally, see the test go red, re-enable.
 - **Races must be tested deterministically.** Firing concurrent calls and hoping they overlap passes by luck. Hold a lock from the owner connection (e.g. `lock table ... in exclusive mode`) so the racing calls queue up, wait for them with `waitForBlockedQueries()`, then release. Example: the invitation race test in `members.integration.test.ts`.
+- **Tests never depend on today.** A test with fixed dates calls `freezeDate()` (`src/testing/frozen-date.ts`) when a rule reads the clock (a closed invoice, what is overdue). A date that was in the future when the test was written stops being so, and the test fails with no code change (seen 2026-11-04).
 - `pnpm test` never needs a database.
 - **Demo household** (`packages/shared/src/reports/demo/`): one fictional couple whose period facts
   give the Home design's numbers (`../design/home/`: today 20 out, period 5 out – 4 nov, budget income
