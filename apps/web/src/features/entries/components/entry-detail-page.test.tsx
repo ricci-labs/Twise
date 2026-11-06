@@ -290,6 +290,19 @@ describe('ENT-03 actions', () => {
     await expect.element(page.getByText('Excluir com motivo')).not.toBeInTheDocument()
   })
 
+  it('starts a refund from a card purchase, filled from it', async () => {
+    await openDetail(DINNER)
+
+    await page.getByRole('button', { name: 'Ações deste lançamento' }).click()
+    await page.getByText('Registrar estorno').click()
+
+    const form = page.getByRole('dialog', { name: 'Novo lançamento' })
+    await expect.element(form.getByRole('radio', { name: 'Estorno' })).toBeChecked()
+    await expect
+      .element(form.getByLabelText(/^Descrição/))
+      .toHaveValue('Estorno: Jantar de aniversário')
+  })
+
   it('repeats an entry: the new entry filled the same, dated today', async () => {
     await openDetail(DINNER)
 

@@ -7,11 +7,14 @@ import {
 import { EntryForm } from '@web/features/entries/components/entry-form'
 import { formInputOf } from '@web/features/entries/components/entry-form-values'
 import { EntryMatchQuestion } from '@web/features/entries/components/entry-match-question'
+import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
+  EntryFormInput,
   EntryPrefill,
   NewEntryProps,
   PlannedEntryProps,
   PlannedOccurrence,
+  RefundedEntryProps,
   RepeatedEntryProps,
   SavedEntry,
 } from '@web/features/entries/entries.types'
@@ -64,6 +67,9 @@ function NewEntryFlow(props: NewEntryProps) {
   if (props.repeatEntryId) {
     return <RepeatedEntry {...flow} repeatEntryId={props.repeatEntryId} />
   }
+  if (props.refundEntryId) {
+    return <RefundedEntry {...flow} refundEntryId={props.refundEntryId} />
+  }
   if (props.occurrenceId) {
     return <PlannedEntry {...flow} occurrenceId={props.occurrenceId} />
   }
@@ -82,6 +88,22 @@ function RepeatedEntry(props: RepeatedEntryProps) {
       prefill={{ values: { ...formInputOf(entry.data), occurredOn: today } }}
     />
   )
+}
+
+function RefundedEntry(props: RefundedEntryProps) {
+  const entry = useQuery(entryQueryOptions(props.workspaceId, props.refundEntryId))
+  if (!entry.data) {
+    return null
+  }
+  const values: EntryFormInput = {
+    ...formInputOf(entry.data),
+    entryType: 'refund',
+    description: entriesMessages.newEntry.refund.description(entry.data.description),
+    occurredOn: todayIn(TIME_ZONE, new Date()),
+    paymentMethod: '',
+    spentByUserId: '',
+  }
+  return <NewEntryForm {...props} prefill={{ values }} />
 }
 
 function PlannedEntry(props: PlannedEntryProps) {

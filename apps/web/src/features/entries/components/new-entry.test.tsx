@@ -770,6 +770,30 @@ describe('ENT-02 opening balance', () => {
     ])
   })
 
+  it('records a refund on a card, under "Mais", with no payment account', async () => {
+    const { recorded } = await openNewEntry()
+    await page.getByRole('radio', { name: 'Mais' }).click()
+    await page.getByRole('button', { name: /^Estorno/ }).click()
+
+    await expect.element(page.getByRole('radio', { name: 'Estorno' })).toBeChecked()
+    await expect.element(page.getByText(/As parcelas futuras não mudam/)).toBeVisible()
+    await page.getByLabelText(/^Valor/).fill('50')
+    await page.getByLabelText(/^Descrição/).fill('Estorno do tênis')
+    await page.getByRole('button', { name: /^Categoria/ }).click()
+    await page.getByRole('button', { name: /^Lazer/ }).click()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    await expect.element(page.getByText('Lançamento registrado.')).toBeVisible()
+    expect(recorded).toEqual([
+      expect.objectContaining({
+        entryType: 'refund',
+        cardAccountId: CARD_X,
+        amountCents: 5_000,
+        shares: [],
+      }),
+    ])
+  })
+
   it('opens on an account from a link', async () => {
     await openNewEntry({ search: `&entryType=opening_balance&entryAccount=${CHECKING}` })
 

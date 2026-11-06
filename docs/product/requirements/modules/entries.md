@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for entries — list with search, filters, period and summary, the new-entry form for every type (expense, card purchase, income, transfer, invoice payment, settlement, opening balance), detail, edit (details or replace), delete, restore and trash.
 read_when: Designing or building ENT-01..05, or any shortcut that opens the new-entry form.
-updated: 2026-10-16
+updated: 2026-11-06
 ---
 
 # Entries
@@ -21,7 +21,8 @@ Standards: `../ui-standards.md`. Messages per code: `../error-messages.md`. Doma
   | `invoice_payment` | "Pagamento de fatura" | Pays a card invoice; a transfer, never spending |
   | `settlement` | "Recebimento de contato" | A contact paying back what they owe |
   | `opening_balance` | "Saldo inicial" | The starting balance of a money account |
-  Refunds ("estorno") and adjustments are not accepted yet (`../api-gaps.md`).
+  | `refund` | "Estorno" | The card gave back the money of a purchase: under "Mais", or "Registrar estorno" on a card purchase (`ENT-03`), which fills the form from it |
+  A refund asks for the card, the category and optionally the parts of contacts; no payment account. It says "O valor volta como crédito na fatura desta data, ou na fatura aberta se ela já fechou. As parcelas futuras não mudam." Adjustments are not accepted (`../api-gaps.md`).
 - **Money** is typed in reais and sent as integer cents, always positive (the opening balance may be
   negative: "saldo devedor").
 - **Description** 1–200 characters; **notes** up to 2000; **dates** are real calendar days, past or
@@ -72,7 +73,7 @@ wraps instead of being cut. Amounts: money out in ink with "−"; money in in `m
 transfers and invoice payments in `ink-muted` with no sign (they are not spending). Day totals stay
 Later.
 **RF-ENT-2** Filters, all answered by the API (G45), never applied to what is on screen: period
-(default the current financial period), type (one or more of the seven), account or card, category
+(default the current financial period), type (one or more of the eight), account or card, category
 (a parent includes its subcategories: the chip reads "Mercado e subcategorias"), who spent (Todos
 or a member) and "Só os divididos com contatos". Phone: one "Filtros" sheet with Tipo (multiple
 chips), Conta ou cartão and Categoria (the app's pickers, most used first, with search), Quem
