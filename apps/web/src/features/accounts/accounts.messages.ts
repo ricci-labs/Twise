@@ -389,6 +389,7 @@ export const accountsMessages = {
         paidSoFar: (amount: string) => `Pago até agora: ${amount}`,
         ownFoot: 'O que é de vocês',
         frontedFoot: 'Entra em A receber',
+        contactCount: (count: number) => (count === 1 ? '1 contato' : `${count} contatos`),
       },
       linesTitle: 'Lançamentos da fatura',
       linesCount: (count: number) => (count === 1 ? '1 lançamento' : `${count} lançamentos`),

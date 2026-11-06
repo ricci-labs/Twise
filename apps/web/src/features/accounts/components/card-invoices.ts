@@ -127,6 +127,7 @@ function emptyInvoice(referenceMonth: string, card: CardSummary, today: IsoDate)
     dueCents: 0,
     ownCents: 0,
     frontedCents: 0,
+    contactCount: 0,
   }
 }
 

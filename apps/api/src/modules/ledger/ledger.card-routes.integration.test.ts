@@ -270,6 +270,41 @@ describe('GET /cards/:cardId/invoices/:invoiceId/lines', () => {
 })
 
 describe('own vs fronted on card invoices', () => {
+  it('counts each contact once per invoice, only where they owe a part', async () => {
+    const cardId = (
+      (await (await createCard(owner, 'Card Contacts')).json()) as { accountId: string }
+    ).accountId
+    const contactNamed = async (name: string) =>
+      (
+        (await (await owner.post(`${workspacePath}/contacts`, { name })).json()) as {
+          contactId: string
+        }
+      ).contactId
+    const j = await contactNamed('Contact J2')
+    const k = await contactNamed('Contact K2')
+    const purchase = (description: string, shares: object[], installmentCount = 1) =>
+      owner.post(`${workspacePath}/entries`, {
+        entryType: 'card_purchase',
+        occurredOn: '2026-10-05',
+        description,
+        amountCents: 30_000,
+        installmentCount,
+        cardAccountId: cardId,
+        categoryId,
+        shares,
+      })
+    await purchase('Jantar', [
+      { contactId: j, amountCents: 5_000 },
+      { contactId: k, amountCents: 5_000 },
+    ])
+    await purchase('Tênis', [{ contactId: j, amountCents: 6_000 }], 2)
+
+    const invoices = (await (
+      await owner.get(`${workspacePath}/cards/${cardId}/invoices`)
+    ).json()) as { contactCount: number }[]
+    expect(invoices.map(({ contactCount }) => contactCount)).toEqual([2, 1])
+  })
+
   it('splits every invoice and each line into what is ours and what others owe', async () => {
     const cardId = (
       (await (await createCard(owner, 'Card Fronted')).json()) as { accountId: string }
