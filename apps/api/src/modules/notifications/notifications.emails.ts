@@ -4,6 +4,7 @@ import type { NotificationEmailInput } from '@api/modules/notifications/notifica
 import {
   billReminderPayloadSchema,
   formatBrl,
+  type InvoiceReminderPayload,
   type IsoDate,
   invoiceReminderPayloadSchema,
 } from '@financas/shared'
@@ -12,7 +13,7 @@ export function notificationEmail({
   kind,
   payload,
   recipient,
-  appLink,
+  workspaceLink,
 }: NotificationEmailInput): EmailMessage | null {
   switch (kind) {
     case 'bill_reminder': {
@@ -30,7 +31,7 @@ export function notificationEmail({
           paragraphs: [
             `Lembrete: ${bill.data.description} vence em ${brazilianDate(bill.data.dueOn)}, no valor de ${amount}.`,
           ],
-          action: { label: 'Abrir o Twise', url: appLink },
+          action: { label: 'Abrir o Twise', url: `${workspaceLink}/planning/occurrences` },
           notes: ['Se já pagou, registre o pagamento para o lembrete sair da lista.'],
         }),
       }
@@ -49,7 +50,7 @@ export function notificationEmail({
           paragraphs: [
             `A fatura do ${invoice.data.cardName} vence em ${brazilianDate(invoice.data.dueOn)}, com ${formatBrl(invoice.data.amountCents)} até agora.`,
           ],
-          action: { label: 'Ver a fatura', url: appLink },
+          action: { label: 'Ver a fatura', url: `${workspaceLink}${invoicePath(invoice.data)}` },
           notes: ['O valor pode mudar até o fechamento.'],
         }),
       }
@@ -57,6 +58,10 @@ export function notificationEmail({
     default:
       return null
   }
+}
+
+function invoicePath({ cardId, invoiceId }: InvoiceReminderPayload): string {
+  return cardId && invoiceId ? `/cards/${cardId}/invoices/${invoiceId}` : '/cards'
 }
 
 function brazilianDate(date: IsoDate): string {

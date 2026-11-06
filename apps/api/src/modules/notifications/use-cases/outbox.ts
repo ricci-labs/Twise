@@ -120,7 +120,7 @@ async function emailFor(
       kind: notification.kind,
       payload: notification.payload,
       recipient: await getAccount(db, notification.recipientUserId),
-      appLink: deps.publicUrl,
+      workspaceLink: `${deps.publicUrl}/w/${notification.workspaceId}`,
     })
   }
   const prepared = preparedEmailPayloadSchema.safeParse(notification.payload)

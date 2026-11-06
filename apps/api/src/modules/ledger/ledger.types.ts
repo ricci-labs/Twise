@@ -334,6 +334,7 @@ export type ContactItems = {
 
 export type InvoiceDue = {
   invoiceId: string
+  cardId: string
   cardName: string
   dueOn: string
   dueCents: number

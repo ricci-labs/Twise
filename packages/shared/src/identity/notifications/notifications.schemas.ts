@@ -11,6 +11,8 @@ export const billReminderPayloadSchema = z.object({
 export type BillReminderPayload = z.infer<typeof billReminderPayloadSchema>
 
 export const invoiceReminderPayloadSchema = z.object({
+  cardId: z.string().min(1).optional(),
+  invoiceId: z.string().min(1).optional(),
   cardName: z.string().min(1),
   amountCents: z.number().int().nonnegative(),
   dueOn: isoDateSchema,

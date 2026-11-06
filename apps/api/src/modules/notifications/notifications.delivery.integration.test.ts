@@ -74,6 +74,31 @@ async function rowsOf(workspaceId: string) {
 }
 
 describe('deliverDueNotifications', () => {
+  it('links an invoice reminder to that invoice, and an old one to the cards', async () => {
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(userId, 'Links')
+    const recording = createRecordingMailer()
+    const invoice = { cardName: 'Card X', amountCents: 50_000, dueOn: '2026-10-20' }
+    await queue(
+      workspaceId,
+      billReminder(workspaceId, {
+        kind: 'invoice_reminder',
+        payload: { ...invoice, cardId: 'card-1', invoiceId: 'invoice-1' },
+      }),
+    )
+    await queue(
+      workspaceId,
+      billReminder(workspaceId, { kind: 'invoice_reminder', payload: invoice }),
+    )
+
+    await deliverDueNotifications(databases.app, workspaceId, deps(recording.mailer))
+
+    const links = recording.sent.map((message) => message.text)
+    expect(links.join()).toContain(
+      `${TEST_PUBLIC_URL}/w/${workspaceId}/cards/card-1/invoices/invoice-1`,
+    )
+    expect(links.join()).toContain(`Ver a fatura: ${TEST_PUBLIC_URL}/w/${workspaceId}/cards\n`)
+  })
+
   it('emails what is due in pt-BR and marks it sent', async () => {
     const { workspaceId } = await fixtures.createWorkspaceOwnedBy(userId, 'Deliver')
     const recording = createRecordingMailer()
@@ -91,6 +116,9 @@ describe('deliverDueNotifications', () => {
       subject: 'Aluguel vence em 20/10/2026',
     })
     expect(recording.sent[0]?.text).toContain('no valor de R$ 2.000,00')
+    expect(recording.sent[0]?.text).toContain(
+      `${TEST_PUBLIC_URL}/w/${workspaceId}/planning/occurrences`,
+    )
     expect((await rowsOf(workspaceId))[0]).toMatchObject({ status: 'sent', sentAt: NOW })
     expect(await captured.scrape()).toContain(
       'financas_notifications_total{channel="email",kind="bill_reminder",outcome="sent"} 1',
