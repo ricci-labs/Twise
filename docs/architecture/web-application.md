@@ -143,8 +143,7 @@ tests build their own with a memory history.
   | Error | Does |
   |---|---|
   | 401 `SESSION_REQUIRED` | `queryClient.clear()`; if there was a session (the `['me']` query had data), go to `/login?next=<here>&notice=session-ended` ("Sua sessão terminou. Entre de novo.", RNF-SEC-3); a first visit just lands on `/login` |
-  | 403 `PERMISSION_DENIED` (or `FORBIDDEN`) | Toast with its message (`showToast`); the workspace queries are invalidated, so permissions refetch (`app/router.ts`). Other 403 codes (`SIGNUP_DISABLED`, `EMAIL_NOT_VERIFIED`…) belong to their screen and never toast |
-  The refresh runs at most once every 30 s: what it refetches may be refused again, and each refusal would start another refresh (a request loop, seen 2026-11-06).
+  | 403 `PERMISSION_DENIED` (or `FORBIDDEN`) | Toast with its message (`showToast`); the workspace queries are invalidated, so permissions refetch (`app/router.ts`). Other 403 codes (`SIGNUP_DISABLED`, `EMAIL_NOT_VERIFIED`…) belong to their screen and never toast. At most once every 30 s: what it refetches may be refused again, and each refusal would start another refresh (a request loop, seen 2026-11-06) |
   | `NetworkError` | The offline banner (`OfflineBanner`, from `navigator.onLine` and the `online`/`offline` events); writes disabled (RNF-REL-3) |
   | 5xx | The page or form shows "Algo deu errado…" with the `ref` |
 - **Everything else** is shown where it happened, with the message from
