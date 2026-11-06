@@ -420,6 +420,7 @@ export type CardInvoice = {
   dueCents: number
   ownCents: number
   frontedCents: number
+  contactCount: number
 }
 
 export type InvoiceLineView = {

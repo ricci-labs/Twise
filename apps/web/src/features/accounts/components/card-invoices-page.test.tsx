@@ -147,6 +147,7 @@ describe('CARD-02 and CARD-03 on the desktop', () => {
       .toBeVisible()
     await expect.element(page.getByRole('heading', { name: 'Total da fatura' })).toBeVisible()
     await expect.element(page.getByText('Pago até agora: R$ 0,00')).toBeVisible()
+    await expect.element(page.getByText('1 contato', { exact: true })).toBeVisible()
     const table = page.getByRole('table', { name: 'Lançamentos da fatura' })
     await expect.element(table.getByRole('cell', { name: '1/3', exact: true })).toBeVisible()
     await expect.element(table.getByRole('cell', { name: 'R$ 160,00', exact: true })).toBeVisible()

@@ -70,6 +70,7 @@ function storedInvoice(
     paidCents: amounts.paid,
     dueCents: amounts.total - amounts.paid,
     frontedCents: amounts.fronted,
+    contactCount: amounts.fronted > 0 ? 1 : 0,
     ownCents: amounts.total - amounts.fronted,
   }
 }

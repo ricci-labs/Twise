@@ -137,6 +137,11 @@ export function CardInvoicesDesktop({
               key="fronted"
               label={kpis.fronted}
               value={<Amount cents={invoice.frontedCents} size="kpi" isCentsRaised />}
+              badge={
+                invoice.contactCount > 0 ? (
+                  <KpiBadge>{kpis.contactCount(invoice.contactCount)}</KpiBadge>
+                ) : undefined
+              }
             >
               <p className="text-ink-muted">{kpis.frontedFoot}</p>
             </KpiCard>,

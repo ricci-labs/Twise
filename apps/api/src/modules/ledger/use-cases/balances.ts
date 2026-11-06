@@ -5,6 +5,7 @@ import {
   findCardCycle,
   findInvoiceOfCard,
   selectAccountBalances,
+  selectContactCountByInvoice,
   selectFrontedByInvoice,
   selectInvoiceLines,
   selectInvoiceTotals,
@@ -46,6 +47,12 @@ export function listInvoiceTotals(
         row.frontedCents,
       ]),
     )
+    const contactCounts = new Map(
+      (await selectContactCountByInvoice(tx, cardAccountId)).map((row) => [
+        row.invoiceId,
+        row.contactCount,
+      ]),
+    )
     return (await selectInvoiceTotals(tx, cardAccountId)).map((invoice) => {
       const frontedCents = fronted.get(invoice.invoiceId) ?? 0
       return {
@@ -53,6 +60,7 @@ export function listInvoiceTotals(
         referenceMonth: toYearMonthLabel(parseIsoDate(invoice.referenceMonth)),
         frontedCents,
         ownCents: invoice.totalCents - frontedCents,
+        contactCount: contactCounts.get(invoice.invoiceId) ?? 0,
       }
     })
   })

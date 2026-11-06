@@ -96,6 +96,7 @@ export type InvoiceTotal = {
   dueCents: number
   frontedCents: number
   ownCents: number
+  contactCount: number
 }
 
 export type AccountsById = ReadonlyMap<string, AccountRef>

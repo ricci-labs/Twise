@@ -798,6 +798,33 @@ export function selectFrontedByInvoice(tx: WorkspaceTransaction, cardAccountId?:
     .groupBy(postings.invoiceId)
 }
 
+export function selectContactCountByInvoice(tx: WorkspaceTransaction, cardAccountId: string) {
+  const shares = alias(postings, 'shares')
+  return tx
+    .select({
+      invoiceId: sql<string>`${postings.invoiceId}`,
+      contactCount: sql<number>`count(distinct ${shares.contactId})`.mapWith(Number),
+    })
+    .from(postings)
+    .innerJoin(journalEntries, eq(journalEntries.id, postings.entryId))
+    .innerJoin(
+      shares,
+      and(
+        eq(shares.entryId, postings.entryId),
+        eq(shares.accountKind, 'receivable'),
+        sql`${shares.installmentNo} is not distinct from ${postings.installmentNo}`,
+      ),
+    )
+    .where(
+      and(
+        isNull(journalEntries.deletedAt),
+        isNotNull(postings.invoiceId),
+        eq(postings.accountId, cardAccountId),
+      ),
+    )
+    .groupBy(postings.invoiceId)
+}
+
 function counterpartOnTheSameInstallment() {
   return sql<string | null>`(
     select other.account_id
