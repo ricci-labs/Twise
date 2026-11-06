@@ -49,6 +49,8 @@ function findViolation(plan: EntryPlan): PostingsViolation | undefined {
       return transferViolation(plan)
     case 'card_purchase':
       return cardPurchaseViolation(plan)
+    case 'refund':
+      return refundViolation(plan)
     case 'invoice_payment':
       return invoicePaymentViolation(plan)
     case 'settlement':
@@ -94,6 +96,15 @@ function cardPurchaseViolation(plan: PlanOf<'card_purchase'>): PostingsViolation
   )
 }
 
+function refundViolation(plan: PlanOf<'refund'>): PostingsViolation | undefined {
+  return (
+    positiveAmountViolation(plan.amountCents) ??
+    kindViolation(plan.card, 'credit_card', 'NOT_A_CARD') ??
+    kindViolation(plan.category, 'expense_category', 'NOT_AN_EXPENSE_CATEGORY') ??
+    sharesViolation(plan)
+  )
+}
+
 function invoicePaymentViolation(plan: PlanOf<'invoice_payment'>): PostingsViolation | undefined {
   return (
     positiveAmountViolation(plan.amountCents) ??
@@ -128,6 +139,8 @@ function linesOf(plan: EntryPlan): PlanLine[] {
       return moneyMoves(plan.amountCents, plan.from, plan.to)
     case 'card_purchase':
       return cardPurchaseLines(plan)
+    case 'refund':
+      return refundLines(plan)
     case 'invoice_payment':
       return [
         { account: plan.card, amountCents: plan.amountCents, invoiceId: plan.invoiceId },
@@ -152,6 +165,24 @@ function expenseLines(plan: PlanOf<'expense'>): PlanLine[] {
     contactId: share.contactId,
   }))
   return [...ownLine, ...shareLines, { account: plan.paidFrom, amountCents: -plan.amountCents }]
+}
+
+function refundLines(plan: PlanOf<'refund'>): PlanLine[] {
+  const { effectiveOn, invoiceId } = plan.target
+  const ownCents = plan.amountCents - sharedCents(plan.shares)
+  const ownLine =
+    ownCents > 0 ? [{ account: plan.category, amountCents: -ownCents, effectiveOn }] : []
+  const shareLines = plan.shares.map((share) => ({
+    account: receivableOf(plan),
+    amountCents: -share.amountCents,
+    effectiveOn,
+    contactId: share.contactId,
+  }))
+  return [
+    { account: plan.card, amountCents: plan.amountCents, effectiveOn, invoiceId },
+    ...ownLine,
+    ...shareLines,
+  ]
 }
 
 function cardPurchaseLines(plan: PlanOf<'card_purchase'>): PlanLine[] {
@@ -203,7 +234,7 @@ function partiesOf(plan: PlanOf<'card_purchase'>): SharingParty[] {
   return [...own, ...plan.shares]
 }
 
-function receivableOf(plan: PlanOf<'expense' | 'card_purchase'>): AccountRef {
+function receivableOf(plan: PlanOf<'expense' | 'card_purchase' | 'refund'>): AccountRef {
   if (!plan.receivable) {
     throw new Error('A shared entry needs the receivable account')
   }
@@ -214,7 +245,9 @@ function sharedCents(shares: readonly ContactShare[]): Cents {
   return shares.reduce((sum, share) => sum + share.amountCents, 0)
 }
 
-function sharesViolation(plan: PlanOf<'expense' | 'card_purchase'>): PostingsViolation | undefined {
+function sharesViolation(
+  plan: PlanOf<'expense' | 'card_purchase' | 'refund'>,
+): PostingsViolation | undefined {
   if (plan.shares.length === 0) {
     return undefined
   }

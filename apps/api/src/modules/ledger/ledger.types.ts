@@ -130,6 +130,8 @@ export type CardPurchaseInput = Extract<EntryInput, { entryType: 'card_purchase'
 
 export type InvoicePaymentInput = Extract<EntryInput, { entryType: 'invoice_payment' }>
 
+export type RefundInput = Extract<EntryInput, { entryType: 'refund' }>
+
 export type CardSetup = CardCycle & {
   paymentAccountId: string | null
 }
