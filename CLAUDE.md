@@ -4,7 +4,7 @@ Multi-tenant personal finance app, starting with a couple who pool their income.
 a web dashboard and a WhatsApp agent (Claude) that records expenses, charges third parties and answers questions.
 Self-hosted on a small headless Debian homelab, deployed with Dokploy.
 
-**Status:** monorepo scaffolded (`apps/api`, `apps/web`, `packages/shared`). See `docs/product/roadmap.md` → "Current focus".
+**Status:** API and web app running in production; the WhatsApp channel and the agent are not built yet. See `docs/product/roadmap.md` → "Current focus" and "Left of Phase 1".
 
 ## Talking to the user
 - Reply in Brazilian Portuguese. Code, identifiers, commits and docs are in English.

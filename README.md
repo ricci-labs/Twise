@@ -12,7 +12,7 @@
 
 Household finance for couples, with a web dashboard and (soon) a WhatsApp assistant.
 
-[![Status](https://img.shields.io/badge/status-API%20%2B%20web%20app%20taking%20shape-80dca5?style=flat-square)](docs/product/roadmap.md)
+[![Status](https://img.shields.io/badge/status-API%20%2B%20web%20app%20live-80dca5?style=flat-square)](docs/product/roadmap.md)
 [![Node](https://img.shields.io/badge/node-24%20LTS-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/typescript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![pnpm](https://img.shields.io/badge/pnpm-workspaces-F69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io)
@@ -27,14 +27,9 @@ Household finance for couples, with a web dashboard and (soon) a WhatsApp assist
 
 > [!NOTE]
 > **The backend is done and running in production** on a home server: ledger, cards and invoices, shared purchases and charges, planning, dashboard metrics and alerts, reminders, attachments and an audit log, all behind a typed HTTP API ([Postman collection](docs/api/postman.md)).
-> **The web app is taking shape** as an installable PWA. Already live:
-> - its foundation (design tokens, components, checks);
-> - every account screen (log in, sign up, email confirmation, password reset, invitations, the app opening);
-> - the **Home**: the period overview with its indicators, alerts, forecasts and budgets, the first run and a public demo page;
-> - the **new entry form** for every kind of entry: expense, card purchase in installments, split with contacts, income, transfer, invoice payment, a contact paying back and opening balance, plus "repeat a recent one" and suggestions;
-> - **accounts, categories and subcategories, cards, invoices and the trash**.
+> **The web app is live too**, as an installable PWA, on every screen of the first version but one: the Home with its alerts and forecasts, new entries of every kind, the entries list, accounts, cards and invoices, planning (bills, budgets, goals, commission split), contacts and charges, "can I afford it?", settings, members and roles, and the history.
 >
-> **Next:** the entries list, planning and contacts, whose [requirements](docs/product/requirements/README.md) are written screen by screen, and then the WhatsApp channel with the Claude agent. Follow along in the [roadmap](docs/product/roadmap.md).
+> **Next:** receipts on the web, charge reminders, and then the WhatsApp channel with the Claude agent. Follow along in the [roadmap](docs/product/roadmap.md).
 
 ## A first look
 
@@ -105,17 +100,17 @@ The web dashboard shows the **period overview** (fixed income, spent, committed,
 |---|---|---|---|
 | 📊 | **Period overview** | Free to spend = fixed income − spent − committed, per day, over a configurable financial month (1st, day N, or N-th business day) | ✅ API · web |
 | 🚨 | **Alerts** | Budget over or ahead of pace, balance going negative, bills overdue, commission not yet split, contacts overdue | ✅ API · web |
-| 🛒 | **"Can I afford it?"** | Simulates a purchase (in installments too) and shows its effect month by month | ✅ API |
+| 🛒 | **"Can I afford it?"** | Simulates a purchase (in installments too) and shows its effect month by month | ✅ API · web |
 | 💳 | **Cards and invoices** | Closing and due days per card, installments spread across future invoices, invoice payments never counted as spending twice | ✅ API · web |
 | 🤝 | **Third parties** | Several people per purchase, installments included; charges with the pt-BR message and a Pix copy-and-paste code; partial payments | ✅ API · split and paybacks on the web · contacts screens and sending by WhatsApp next |
-| 🔁 | **Planned vs actual** | Fixed bills, salaries and subscriptions create expected occurrences, matched by real entries; budgets and goals | ✅ API |
-| 💰 | **Commission split** | Configurable steps (reserve, goals, spending) that suggest where a variable income goes | ✅ API |
+| 🔁 | **Planned vs actual** | Fixed bills, salaries and subscriptions create expected occurrences, matched by real entries; budgets and goals | ✅ API · web |
+| 💰 | **Commission split** | Configurable steps (reserve, goals, spending) that suggest where a variable income goes | ✅ API · web |
 | ⏰ | **Reminders** | Bills and invoices, by each member's lead time and quiet hours | ✅ email · WhatsApp next |
-| 📎 | **Receipts** | Attach receipts to entries and charges | ✅ API · WhatsApp photos next |
-| 👥 | **Workspaces** | Isolated spaces ("Home", "Personal") with members, invitations and module-level permissions | ✅ API |
-| 🕵️ | **History** | Append-only audit log of every change, with who, when and from where | ✅ API |
-| 🖥️ | **Web app** | Mobile-first PWA for the couple: installable, works with a weak signal, light and dark themes | ✅ account screens, Home, new entry, accounts and cards · 🔜 entries list, planning, contacts |
-| 💬 | **WhatsApp agent** | Records expenses, income, transfers and paybacks in natural language. Always asks before saving | 🔜 after the web |
+| 📎 | **Receipts** | Attach receipts to entries and charges | ✅ API · web and WhatsApp photos next |
+| 👥 | **Workspaces** | Isolated spaces ("Home", "Personal") with members, invitations and module-level permissions | ✅ API · web |
+| 🕵️ | **History** | Append-only audit log of every change, with who, when and from where | ✅ API · web |
+| 🖥️ | **Web app** | Mobile-first PWA for the couple: installable, works with a weak signal, light and dark themes | ✅ |
+| 💬 | **WhatsApp agent** | Records expenses, income, transfers and paybacks in natural language. Always asks before saving | 🔜 next |
 
 ## How it works
 
