@@ -39,12 +39,16 @@ export function InvoiceLinesPreview({
           </TextLink>
         )}
       </div>
-      <PreviewBody hasInvoice={invoice.invoiceId !== null} lines={lines} />
+      <PreviewBody
+        workspaceId={workspaceId}
+        hasInvoice={invoice.invoiceId !== null}
+        lines={lines}
+      />
     </section>
   )
 }
 
-function PreviewBody({ hasInvoice, lines }: PreviewBodyProps) {
+function PreviewBody({ workspaceId, hasInvoice, lines }: PreviewBodyProps) {
   if (hasInvoice && !lines) {
     return <ListSkeleton rows={3} />
   }
@@ -55,5 +59,5 @@ function PreviewBody({ hasInvoice, lines }: PreviewBodyProps) {
       </p>
     )
   }
-  return <InvoiceLineList lines={lines.slice(0, PREVIEW_LINES)} />
+  return <InvoiceLineList workspaceId={workspaceId} lines={lines.slice(0, PREVIEW_LINES)} />
 }

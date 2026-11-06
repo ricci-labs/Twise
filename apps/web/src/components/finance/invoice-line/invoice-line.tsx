@@ -5,11 +5,13 @@ import {
   invoiceLineDateVariants,
   invoiceLineDetailVariants,
   invoiceLineInstallmentVariants,
+  invoiceLineMainVariants,
   invoiceLineNameVariants,
   invoiceLineTextVariants,
   invoiceLineValueVariants,
   invoiceLineVariants,
 } from '@web/components/finance/invoice-line/invoice-line.variants'
+import { cloneElement } from 'react'
 
 export function InvoiceLine({
   date,
@@ -19,9 +21,11 @@ export function InvoiceLine({
   detail,
   amountCents,
   isPayment = false,
+  link,
 }: InvoiceLineProps) {
-  return (
-    <li data-slot="invoice-line" className={invoiceLineVariants()}>
+  const className = invoiceLineMainVariants()
+  const content = (
+    <>
       <span className={invoiceLineDateVariants()}>{date}</span>
       <CategoryArt name={description} icon={icon} size="row" />
       <span className={invoiceLineTextVariants()}>
@@ -34,6 +38,15 @@ export function InvoiceLine({
       <span className={invoiceLineValueVariants({ isPayment })}>
         <Amount cents={amountCents} size="inherit" />
       </span>
+    </>
+  )
+  return (
+    <li data-slot="invoice-line" className={invoiceLineVariants()}>
+      {link ? (
+        cloneElement(link, { className }, content)
+      ) : (
+        <div className={className}>{content}</div>
+      )}
     </li>
   )
 }

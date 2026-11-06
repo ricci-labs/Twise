@@ -144,13 +144,13 @@ function InvoiceDetail({ workspaceId, permissions, card, invoice }: InvoiceDetai
             { value: 'fronted', label: messages.filters.fronted },
           ]}
         />
-        <InvoiceLinesBody filter={filter} lines={lines} />
+        <InvoiceLinesBody workspaceId={workspaceId} filter={filter} lines={lines} />
       </div>
     </PageFrame>
   )
 }
 
-function InvoiceLinesBody({ filter, lines }: InvoiceLinesBodyProps) {
+function InvoiceLinesBody({ workspaceId, filter, lines }: InvoiceLinesBodyProps) {
   if (lines.error) {
     return (
       <SectionError
@@ -173,7 +173,7 @@ function InvoiceLinesBody({ filter, lines }: InvoiceLinesBodyProps) {
   }
   return (
     <>
-      <InvoiceLineList lines={lines.lines} />
+      <InvoiceLineList workspaceId={workspaceId} lines={lines.lines} />
       {lines.hasMore && <ShowMoreButton isLoading={lines.isLoadingMore} onClick={lines.loadMore} />}
     </>
   )

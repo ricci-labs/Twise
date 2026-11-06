@@ -1,3 +1,10 @@
+import type { ReactElement, ReactNode } from 'react'
+
+export type InvoiceLineLinkProps = {
+  className?: string
+  children?: ReactNode
+}
+
 export type InvoiceLineProps = {
   date: string
   description: string
@@ -6,4 +13,5 @@ export type InvoiceLineProps = {
   detail?: string
   amountCents: number
   isPayment?: boolean
+  link?: ReactElement<InvoiceLineLinkProps>
 }
